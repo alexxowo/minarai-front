@@ -5,6 +5,7 @@ import { GoChevronRight, GoChevronDown, GoDotFill, GoSidebarCollapse, GoSidebarE
 import { MdDashboard, MdPayments, MdAdminPanelSettings, MdSettings } from "react-icons/md";
 import { FaFolder, FaTrophy, FaUserGraduate, FaFileInvoiceDollar, FaUsers } from "react-icons/fa";
 import { BsBank } from "react-icons/bs";
+import LogoMinaraiColor from "@/assets/images/logotipo_color.svg"
 
 export function Sidebar() {
   const { user, isSidebarCollapsed, toggleSidebar } = useAuthStore();
@@ -117,9 +118,17 @@ export function Sidebar() {
         onMouseLeave={() => setIsHovered(false)}
     >
       <div className="p-6 flex items-center justify-between">
-        <h1 className={`text-2xl font-bold text-golden-rod-500 font-bebas tracking-wide transition-opacity duration-300 whitespace-nowrap overflow-hidden ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>
-          MINARAI DOJO
-        </h1>
+        {/* <img src={LogoMinaraiColor} alt="Logo Minarai" className={`w-12 h-12 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}  /> */}
+        <div className={`flex items-center gap-2 overflow-hidden transition-all duration-300 ${isExpanded ? 'opacity-100 max-w-full' : 'opacity-0 max-w-0 hidden'}`}>
+             <img 
+                src={LogoMinaraiColor} 
+                alt="Minarai Dojo" 
+                className="h-10 w-auto object-contain flex-shrink-0"
+            />
+            <h1 className="text-xl font-bold text-white font-bebas tracking-wide whitespace-nowrap">
+                MINARAI DOJO
+            </h1> 
+        </div> 
         {isExpanded && (
             <button
                 onClick={toggleSidebar}
