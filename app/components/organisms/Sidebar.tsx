@@ -2,8 +2,8 @@ import { NavLink, useLocation } from "react-router";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useState, useEffect } from "react";
 import { GoChevronRight, GoChevronDown, GoDotFill, GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
-import { MdDashboard, MdPayments, MdAdminPanelSettings } from "react-icons/md";
-import { FaFolder, FaTrophy, FaUserGraduate, FaFileInvoiceDollar } from "react-icons/fa";
+import { MdDashboard, MdPayments, MdAdminPanelSettings, MdSettings } from "react-icons/md";
+import { FaFolder, FaTrophy, FaUserGraduate, FaFileInvoiceDollar, FaUsers } from "react-icons/fa";
 import { BsBank } from "react-icons/bs";
 
 export function Sidebar() {
@@ -136,7 +136,7 @@ export function Sidebar() {
          )}
       </div>
 
-      <nav className="flex-1 px-2 space-y-1 overflow-y-auto scrollbar-hide">
+      <nav className="flex-1 px-2 space-y-1 overflow-y-auto scrollbar-minimalist pr-1">
         <div className={headerClass}>Auto Gestión</div>
         <NavLink to="/dashboard" end className={linkClass} title={!isExpanded ? "Panel de Control" : undefined}>
           <MdDashboard className="mr-3 text-lg min-w-[1.125rem]" />
@@ -174,6 +174,11 @@ export function Sidebar() {
             <NavLink to="/dashboard/admin" end className={linkClass} title={!isExpanded ? "Panel Administrativo" : undefined}>
                 <MdAdminPanelSettings className="mr-3 text-lg min-w-[1.125rem]" />
                 <span className={`transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>Panel Administrativo</span>
+            </NavLink>
+
+            <NavLink to="/dashboard/users" className={linkClass} title={!isExpanded ? "Usuarios" : undefined}>
+              <FaUsers className="mr-3 text-lg min-w-[1.125rem]" />
+              <span className={`transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>Usuarios</span>
             </NavLink>
             
             <CollapsibleItem 
@@ -241,7 +246,20 @@ export function Sidebar() {
             </CollapsibleItem>
 
             <div className={headerClass}>Ajustes</div>
-            
+
+            <NavLink 
+              to="/dashboard/system" 
+              className={linkClass}
+              title={!isExpanded ? "Sistema" : undefined}
+            >
+              {({ isActive }) => (
+                <>
+                  <MdSettings className={`mr-3 text-lg transition-all duration-300 min-w-[1.125rem] ${isActive ? "text-black-beauty-900" : "text-gray-400 group-hover:text-white"}`} />
+                  <span className={`transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0 overflow-hidden'}`}>Sistema</span>
+                </>
+              )}
+            </NavLink>
+
             <CollapsibleItem 
                 title="Tesorería" 
                 id="treasury" 

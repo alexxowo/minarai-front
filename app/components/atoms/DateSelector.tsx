@@ -51,7 +51,7 @@ export const DateSelector = ({
       )}
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
-           <FaCalendarAlt className="text-gray-400" />
+           <FaCalendarAlt className="text-golden-rod-500" />
         </div>
         <DatePicker
           selected={selected}

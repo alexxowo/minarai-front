@@ -122,3 +122,28 @@ body{
   --color-formal-garden-900: #112013;
   --color-formal-garden-950: #0b140c;
 }
+
+@layer utilities {
+  .scrollbar-minimalist {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-golden-rod-600) transparent;
+  }
+
+  .scrollbar-minimalist::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-minimalist::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-minimalist::-webkit-scrollbar-thumb {
+    background-color: var(--color-golden-rod-600);
+    border-radius: 3px;
+  }
+
+  .scrollbar-minimalist::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-golden-rod-500);
+  }
+}
