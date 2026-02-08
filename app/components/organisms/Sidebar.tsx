@@ -21,6 +21,7 @@ export function Sidebar() {
     payments: false,
     invoices: false,
     treasury: false,
+    operations: false,
   });
 
   // Automatically expand section if a child is active
@@ -240,6 +241,22 @@ export function Sidebar() {
                   <>
                     <GoDotFill className={`mr-2 text-xs ${isActive ? "text-golden-rod-400" : "text-gray-500 group-hover:text-white"}`} />
                     Listado
+                  </>
+                )}
+              </NavLink>
+            </CollapsibleItem>
+
+            <CollapsibleItem 
+                title="Operaciones" 
+                id="operations" 
+                isActivePath={location.pathname.includes('/dashboard/management')}
+                icon={FaTrophy}
+            >
+              <NavLink to="/dashboard/management/bulk-operations" className={subLinkClass}>
+                {({ isActive }) => (
+                  <>
+                    <GoDotFill className={`mr-2 text-xs ${isActive ? "text-golden-rod-400" : "text-gray-500 group-hover:text-white"}`} />
+                    Masivos
                   </>
                 )}
               </NavLink>

@@ -3,15 +3,65 @@ import type { Route } from "./+types/system";
 import { Input } from "~/components/atoms/Input";
 import { Select } from "~/components/atoms/Select";
 import { Button } from "~/components/atoms/Button";
-import { MdSettings, MdEmail, MdSave, MdCheckCircle, MdError, MdSecurity } from "react-icons/md";
+import { MdSettings, MdEmail, MdSave, MdCheckCircle, MdError, MdSecurity, MdGrade, MdAdd, MdEdit, MdDelete } from "react-icons/md";
 import { FaServer } from "react-icons/fa";
+import { Modal } from "~/components/molecules/Modal";
+
+interface Rank {
+  id: number;
+  name: string;
+  colorCode: string;
+  type: 'Kyu' | 'Dan';
+  number: number;
+  sortOrder: number;
+  requirementMonths: number;
+}
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "Configuración del Sistema - Minarai" }];
 }
 
 export default function SystemSettings() {
-  const [activeTab, setActiveTab] = useState<'general' | 'email'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'email' | 'ranks'>('general');
+  
+  // -- RANKS STATE --
+  const [ranks, setRanks] = useState<Rank[]>([
+      { id: 1, name: "10mo Kyu", colorCode: "#ffffff", type: 'Kyu', number: 10, sortOrder: 1, requirementMonths: 0 },
+      { id: 2, name: "9no Kyu", colorCode: "#ffff00", type: 'Kyu', number: 9, sortOrder: 2, requirementMonths: 3 },
+      { id: 3, name: "8vo Kyu", colorCode: "#ffcc00", type: 'Kyu', number: 8, sortOrder: 3, requirementMonths: 3 },
+      { id: 4, name: "1er Dan", colorCode: "#000000", type: 'Dan', number: 1, sortOrder: 11, requirementMonths: 12 },
+  ]);
+  const [isRankModalOpen, setIsRankModalOpen] = useState(false);
+  const [editingRank, setEditingRank] = useState<Rank | null>(null);
+  const [rankFormData, setRankFormData] = useState<Omit<Rank, 'id'>>({
+      name: "", colorCode: "#000000", type: 'Kyu', number: 0, sortOrder: 0, requirementMonths: 0
+  });
+
+  const handleOpenRankModal = (rank?: Rank) => {
+      if (rank) {
+          setEditingRank(rank);
+          setRankFormData({ ...rank });
+      } else {
+          setEditingRank(null);
+          setRankFormData({ name: "", colorCode: "#ffffff", type: 'Kyu', number: 0, sortOrder: ranks.length + 1, requirementMonths: 3 });
+      }
+      setIsRankModalOpen(true);
+  };
+
+  const handleSaveRank = () => {
+      if (editingRank) {
+          setRanks(prev => prev.map(r => r.id === editingRank.id ? { ...rankFormData, id: r.id } : r));
+      } else {
+          setRanks(prev => [...prev, { ...rankFormData, id: Math.max(...prev.map(r => r.id), 0) + 1 }]);
+      }
+      setIsRankModalOpen(false);
+  };
+
+  const handleDeleteRank = (id: number) => {
+      if (confirm("¿Estás seguro de eliminar este rango?")) {
+          setRanks(prev => prev.filter(r => r.id !== id));
+      }
+  };
   // Mock state for SMTP form
   const [smtpConfig, setSmtpConfig] = useState({
       host: "",
@@ -36,6 +86,7 @@ export default function SystemSettings() {
   const tabs = [
       { id: 'general', label: 'General', icon: MdSettings },
       { id: 'email', label: 'Correo Electrónico', icon: MdEmail },
+      { id: 'ranks', label: 'Rangos', icon: MdGrade },
   ];
 
   return (
@@ -59,7 +110,7 @@ export default function SystemSettings() {
                     return (
                         <button
                             key={tab.id}
-                            onClick={() => setActiveTab(tab.id as 'general' | 'email')}
+                            onClick={() => setActiveTab(tab.id as 'general' | 'email' | 'ranks')}
                             className={`flex items-center px-4 py-3 text-sm font-medium transition-colors border-l-4 ${
                                 activeTab === tab.id
                                     ? "bg-golden-rod-50 border-golden-rod-500 text-golden-rod-700"
@@ -188,8 +239,136 @@ export default function SystemSettings() {
                     </div>
                 </div>
             )}
+
+            {activeTab === 'ranks' && (
+                <div className="animate-fade-in">
+                    <div className="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+                        <div>
+                            <h2 className="text-xl font-bold text-gray-800 flex items-center">
+                                <MdGrade className="mr-2 text-golden-rod-500" />
+                                Configuración de Rangos
+                            </h2>
+                            <p className="text-sm text-gray-500 mt-1">Define los rangos, colores y requisitos.</p>
+                        </div>
+                        <Button variant="primary" icon={<MdAdd />} onClick={() => handleOpenRankModal()}>
+                            Agregar Rango
+                        </Button>
+                    </div>
+
+                    <div className="overflow-hidden rounded-lg border border-gray-200">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Orden</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rango</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cinturón</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Req. Meses</th>
+                                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {ranks.sort((a,b) => a.sortOrder - b.sortOrder).map((rank) => (
+                                    <tr key={rank.id} className="hover:bg-gray-50 transition-colors">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{rank.sortOrder}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{rank.name}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{rank.type}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="flex items-center gap-2">
+                                                <div 
+                                                    className="w-8 h-4 rounded border border-gray-200 shadow-sm" 
+                                                    style={{ backgroundColor: rank.colorCode }} 
+                                                />
+                                                <span className="text-xs text-gray-400 font-mono">{rank.colorCode}</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{rank.requirementMonths} meses</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <button 
+                                                onClick={() => handleOpenRankModal(rank)}
+                                                className="text-golden-rod-600 hover:text-golden-rod-900 mr-3"
+                                            >
+                                                <MdEdit className="text-lg" />
+                                            </button>
+                                            <button 
+                                                onClick={() => handleDeleteRank(rank.id)}
+                                                className="text-red-400 hover:text-red-700"
+                                            >
+                                                <MdDelete className="text-lg" />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )}
         </div>
       </div>
+
+      <Modal isOpen={isRankModalOpen} onClose={() => setIsRankModalOpen(false)} title={editingRank ? "Editar Rango" : "Nuevo Rango"}>
+          <div className="space-y-4">
+              <Input 
+                  label="Nombre del Rango" 
+                  value={rankFormData.name} 
+                  onChange={(e) => setRankFormData({...rankFormData, name: e.target.value})}
+                  placeholder="Ej: 10mo Kyu"
+              />
+              <div className="grid grid-cols-2 gap-4">
+                   <div className="space-y-1">
+                      <label className="text-sm font-medium text-gray-700">Tipo</label>
+                      <Select 
+                          options={[{ value: 'Kyu', label: 'Kyu' }, { value: 'Dan', label: 'Dan' }]}
+                          value={rankFormData.type}
+                          onChange={(val) => setRankFormData({...rankFormData, type: val as 'Kyu' | 'Dan'})}
+                      />
+                  </div>
+                  <Input 
+                      label="Número" 
+                      type="number"
+                      value={rankFormData.number} 
+                      onChange={(e) => setRankFormData({...rankFormData, number: parseInt(e.target.value)})}
+                  />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                  <Input 
+                      label="Orden (Sort Order)" 
+                      type="number"
+                      value={rankFormData.sortOrder} 
+                      onChange={(e) => setRankFormData({...rankFormData, sortOrder: parseInt(e.target.value)})}
+                  />
+                  <Input 
+                      label="Meses Requeridos" 
+                      type="number"
+                      value={rankFormData.requirementMonths} 
+                      onChange={(e) => setRankFormData({...rankFormData, requirementMonths: parseInt(e.target.value)})}
+                  />
+              </div>
+              <div className="space-y-1">
+                  <label className="text-sm font-medium text-gray-700">Color del Cinturón</label>
+                  <div className="flex items-center gap-3">
+                      <input 
+                          type="color" 
+                          value={rankFormData.colorCode} 
+                          onChange={(e) => setRankFormData({...rankFormData, colorCode: e.target.value})}
+                          className="h-10 w-20 rounded cursor-pointer"
+                      />
+                      <Input 
+                          value={rankFormData.colorCode} 
+                          onChange={(e) => setRankFormData({...rankFormData, colorCode: e.target.value})}
+                          placeholder="#000000"
+                          wrapperClassName="flex-1"
+                      />
+                  </div>
+              </div>
+              
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 mt-4">
+                  <Button variant="secondary" onClick={() => setIsRankModalOpen(false)}>Cancelar</Button>
+                  <Button variant="primary" onClick={handleSaveRank}>Guardar</Button>
+              </div>
+          </div>
+      </Modal>
     </div>
   );
 }

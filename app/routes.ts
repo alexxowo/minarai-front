@@ -19,9 +19,11 @@ export default [
         route("profile", "routes/dashboard/profile.tsx"),
         route("users", "routes/dashboard/users/index.tsx"),
         route("users/create", "routes/dashboard/users/create.tsx"),
+        route("users/:userId", "routes/dashboard/users/user-profile.tsx"),
         route("admin", "routes/dashboard/admin-panel.tsx"),
         route("system", "routes/dashboard/system.tsx"),
         route("payments/pending", "routes/dashboard/payments/pending.tsx"),
         route("my-payments", "routes/dashboard/payments/user-list.tsx"),
+        route("management/bulk-operations", "routes/dashboard/management/bulk-operations.tsx"),
     ]),
 ] satisfies RouteConfig;

@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { FaUserPlus, FaEdit, FaTrash, FaUser, FaSearch } from "react-icons/fa";
+import { FaUserPlus, FaEdit, FaUser, FaSearch } from "react-icons/fa";
 import { GoDotFill } from "react-icons/go";
 
 export function meta({}: any) {
@@ -137,12 +137,13 @@ export default function Users() {
                             </td>
                             <td className="px-6 py-4 text-right">
                                 <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button className="p-2 text-gray-400 hover:text-golden-rod-600 hover:bg-golden-rod-50 rounded-lg transition-colors" title="Editar">
+                                    <Link 
+                                        to={`/dashboard/users/${user.id}`}
+                                        className="p-2 text-gray-400 hover:text-golden-rod-600 hover:bg-golden-rod-50 rounded-lg transition-colors" 
+                                        title="Editar"
+                                    >
                                         <FaEdit />
-                                    </button>
-                                    <button className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Eliminar">
-                                        <FaTrash />
-                                    </button>
+                                    </Link>
                                 </div>
                             </td>
                         </tr>
