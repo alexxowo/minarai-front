@@ -13,13 +13,22 @@
  */
 
 import * as runtime from '../runtime';
+import {
+    type StoreRepresentativeRequest,
+    StoreRepresentativeRequestFromJSON,
+    StoreRepresentativeRequestToJSON,
+} from '../models/StoreRepresentativeRequest';
 
-export interface 0035c4e1ba50d6fdac37175767b485e4Request {
+export interface AdministracinRepresentantesApiDeactivateRepresentativeRequest {
     user: number;
 }
 
-export interface B433dae97eede7cb2189397d9e23ae08Request {
+export interface AdministracinRepresentantesApiShowRepresentativeRequest {
     user: number;
+}
+
+export interface AdministracinRepresentantesApiStoreRepresentativeOperationRequest {
+    storeRepresentativeRequest: StoreRepresentativeRequest;
 }
 
 /**
@@ -28,113 +37,13 @@ export interface B433dae97eede7cb2189397d9e23ae08Request {
 export class AdministracinRepresentantesApi extends runtime.BaseAPI {
 
     /**
-     * Creates request options for _0035c4e1ba50d6fdac37175767b485e4 without sending the request
+     * Creates request options for deactivateRepresentative without sending the request
      */
-    async _0035c4e1ba50d6fdac37175767b485e4RequestOpts(requestParameters: 0035c4e1ba50d6fdac37175767b485e4Request): Promise<runtime.RequestOpts> {
+    async deactivateRepresentativeRequestOpts(requestParameters: AdministracinRepresentantesApiDeactivateRepresentativeRequest): Promise<runtime.RequestOpts> {
         if (requestParameters['user'] == null) {
             throw new runtime.RequiredError(
                 'user',
-                'Required parameter "user" was null or undefined when calling _0035c4e1ba50d6fdac37175767b485e4().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        let urlPath = `/api/admin/representatives/{user}`;
-        urlPath = urlPath.replace('{user}', encodeURIComponent(String(requestParameters['user'])));
-
-        return {
-            path: urlPath,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        };
-    }
-
-    /**
-     * Detalle completo del representante con la lista de sus alumnos asociados (Solo Admin).
-     * Ver ficha de un representante y sus representados
-     */
-    async _0035c4e1ba50d6fdac37175767b485e4Raw(requestParameters: 0035c4e1ba50d6fdac37175767b485e4Request, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        const requestOptions = await this._0035c4e1ba50d6fdac37175767b485e4RequestOpts(requestParameters);
-        const response = await this.request(requestOptions, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     * Detalle completo del representante con la lista de sus alumnos asociados (Solo Admin).
-     * Ver ficha de un representante y sus representados
-     */
-    async _0035c4e1ba50d6fdac37175767b485e4(requestParameters: 0035c4e1ba50d6fdac37175767b485e4Request, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this._0035c4e1ba50d6fdac37175767b485e4Raw(requestParameters, initOverrides);
-    }
-
-    /**
-     * Creates request options for _4fa2d0ee6891740d98d1b69148d5891b without sending the request
-     */
-    async _4fa2d0ee6891740d98d1b69148d5891bRequestOpts(): Promise<runtime.RequestOpts> {
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        let urlPath = `/api/admin/representatives`;
-
-        return {
-            path: urlPath,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        };
-    }
-
-    /**
-     * Obtiene una lista de todos los usuarios registrados como representantes o adultos (Solo Admin).
-     * Listar todos los representantes
-     */
-    async _4fa2d0ee6891740d98d1b69148d5891bRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        const requestOptions = await this._4fa2d0ee6891740d98d1b69148d5891bRequestOpts();
-        const response = await this.request(requestOptions, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     * Obtiene una lista de todos los usuarios registrados como representantes o adultos (Solo Admin).
-     * Listar todos los representantes
-     */
-    async _4fa2d0ee6891740d98d1b69148d5891b(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this._4fa2d0ee6891740d98d1b69148d5891bRaw(initOverrides);
-    }
-
-    /**
-     * Creates request options for b433dae97eede7cb2189397d9e23ae08 without sending the request
-     */
-    async b433dae97eede7cb2189397d9e23ae08RequestOpts(requestParameters: B433dae97eede7cb2189397d9e23ae08Request): Promise<runtime.RequestOpts> {
-        if (requestParameters['user'] == null) {
-            throw new runtime.RequiredError(
-                'user',
-                'Required parameter "user" was null or undefined when calling b433dae97eede7cb2189397d9e23ae08().'
+                'Required parameter "user" was null or undefined when calling deactivateRepresentative().'
             );
         }
 
@@ -166,8 +75,8 @@ export class AdministracinRepresentantesApi extends runtime.BaseAPI {
      * Suspende la cuenta de un representante y desactiva a todos sus alumnos asociados en cascada (Solo Admin).
      * Desactivar un representante y sus alumnos
      */
-    async b433dae97eede7cb2189397d9e23ae08Raw(requestParameters: B433dae97eede7cb2189397d9e23ae08Request, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        const requestOptions = await this.b433dae97eede7cb2189397d9e23ae08RequestOpts(requestParameters);
+    async deactivateRepresentativeRaw(requestParameters: AdministracinRepresentantesApiDeactivateRepresentativeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.deactivateRepresentativeRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
         return new runtime.VoidApiResponse(response);
@@ -177,8 +86,164 @@ export class AdministracinRepresentantesApi extends runtime.BaseAPI {
      * Suspende la cuenta de un representante y desactiva a todos sus alumnos asociados en cascada (Solo Admin).
      * Desactivar un representante y sus alumnos
      */
-    async b433dae97eede7cb2189397d9e23ae08(requestParameters: B433dae97eede7cb2189397d9e23ae08Request, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.b433dae97eede7cb2189397d9e23ae08Raw(requestParameters, initOverrides);
+    async deactivateRepresentative(requestParameters: AdministracinRepresentantesApiDeactivateRepresentativeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.deactivateRepresentativeRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Creates request options for getRepresentatives without sending the request
+     */
+    async getRepresentativesRequestOpts(): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/admin/representatives`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Obtiene una lista de todos los usuarios registrados como representantes o adultos (Solo Admin).
+     * Listar todos los representantes
+     */
+    async getRepresentativesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.getRepresentativesRequestOpts();
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Obtiene una lista de todos los usuarios registrados como representantes o adultos (Solo Admin).
+     * Listar todos los representantes
+     */
+    async getRepresentatives(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.getRepresentativesRaw(initOverrides);
+    }
+
+    /**
+     * Creates request options for showRepresentative without sending the request
+     */
+    async showRepresentativeRequestOpts(requestParameters: AdministracinRepresentantesApiShowRepresentativeRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['user'] == null) {
+            throw new runtime.RequiredError(
+                'user',
+                'Required parameter "user" was null or undefined when calling showRepresentative().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/admin/representatives/{user}`;
+        urlPath = urlPath.replace('{user}', encodeURIComponent(String(requestParameters['user'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Detalle completo del representante con la lista de sus alumnos asociados (Solo Admin).
+     * Ver ficha de un representante y sus representados
+     */
+    async showRepresentativeRaw(requestParameters: AdministracinRepresentantesApiShowRepresentativeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.showRepresentativeRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Detalle completo del representante con la lista de sus alumnos asociados (Solo Admin).
+     * Ver ficha de un representante y sus representados
+     */
+    async showRepresentative(requestParameters: AdministracinRepresentantesApiShowRepresentativeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.showRepresentativeRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Creates request options for storeRepresentative without sending the request
+     */
+    async storeRepresentativeRequestOpts(requestParameters: AdministracinRepresentantesApiStoreRepresentativeOperationRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['storeRepresentativeRequest'] == null) {
+            throw new runtime.RequiredError(
+                'storeRepresentativeRequest',
+                'Required parameter "storeRepresentativeRequest" was null or undefined when calling storeRepresentative().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/admin/representatives`;
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: StoreRepresentativeRequestToJSON(requestParameters['storeRepresentativeRequest']),
+        };
+    }
+
+    /**
+     * Crea un nuevo usuario representante (padre o adulto) y opcionalmente le asocia y registra a su primer alumno en el dojo (Solo Admin).
+     * Crear un representante
+     */
+    async storeRepresentativeRaw(requestParameters: AdministracinRepresentantesApiStoreRepresentativeOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.storeRepresentativeRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Crea un nuevo usuario representante (padre o adulto) y opcionalmente le asocia y registra a su primer alumno en el dojo (Solo Admin).
+     * Crear un representante
+     */
+    async storeRepresentative(requestParameters: AdministracinRepresentantesApiStoreRepresentativeOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.storeRepresentativeRaw(requestParameters, initOverrides);
     }
 
 }

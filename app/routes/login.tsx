@@ -1,6 +1,6 @@
 import type { Route } from "./+types/login";
 import { redirect, useNavigate } from "react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "../components/atoms/Input";
 import { useAuthStore } from "../store/useAuthStore";
 
@@ -19,8 +19,15 @@ export async function action({ request }: Route.ActionArgs) {
 export default function Login() {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,7 +45,7 @@ export default function Login() {
     }
 
     try {
-      await login({ email });
+      await login({ email, password });
       navigate("/dashboard");
     } catch (err) {
       setError("Error al iniciar sesión. Inténtalo de nuevo.");

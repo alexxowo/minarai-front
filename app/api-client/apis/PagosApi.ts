@@ -14,42 +14,37 @@
 
 import * as runtime from '../runtime';
 import {
-    type C0d11adea38ecde3d94e4e281c72f01e200Response,
-    C0d11adea38ecde3d94e4e281c72f01e200ResponseFromJSON,
-    C0d11adea38ecde3d94e4e281c72f01e200ResponseToJSON,
-} from '../models/C0d11adea38ecde3d94e4e281c72f01e200Response';
+    type CreatePayment201Response,
+    CreatePayment201ResponseFromJSON,
+    CreatePayment201ResponseToJSON,
+} from '../models/CreatePayment201Response';
 import {
-    type Model0b4da16a79c767828a756a8749652ba2200Response,
-    Model0b4da16a79c767828a756a8749652ba2200ResponseFromJSON,
-    Model0b4da16a79c767828a756a8749652ba2200ResponseToJSON,
-} from '../models/Model0b4da16a79c767828a756a8749652ba2200Response';
+    type GetMyStudents200Response,
+    GetMyStudents200ResponseFromJSON,
+    GetMyStudents200ResponseToJSON,
+} from '../models/GetMyStudents200Response';
 import {
-    type Model487c61ce04a9619a56693f5b75e0e9ce200Response,
-    Model487c61ce04a9619a56693f5b75e0e9ce200ResponseFromJSON,
-    Model487c61ce04a9619a56693f5b75e0e9ce200ResponseToJSON,
-} from '../models/Model487c61ce04a9619a56693f5b75e0e9ce200Response';
+    type GetPayments200Response,
+    GetPayments200ResponseFromJSON,
+    GetPayments200ResponseToJSON,
+} from '../models/GetPayments200Response';
 import {
-    type Model5e2794ba3d3c64e70873367505e4a751201Response,
-    Model5e2794ba3d3c64e70873367505e4a751201ResponseFromJSON,
-    Model5e2794ba3d3c64e70873367505e4a751201ResponseToJSON,
-} from '../models/Model5e2794ba3d3c64e70873367505e4a751201Response';
+    type ShowPayment200Response,
+    ShowPayment200ResponseFromJSON,
+    ShowPayment200ResponseToJSON,
+} from '../models/ShowPayment200Response';
 import {
-    type Model826dc6b24dd704607aa018a59207dd96200Response,
-    Model826dc6b24dd704607aa018a59207dd96200ResponseFromJSON,
-    Model826dc6b24dd704607aa018a59207dd96200ResponseToJSON,
-} from '../models/Model826dc6b24dd704607aa018a59207dd96200Response';
+    type VerifyPayment200Response,
+    VerifyPayment200ResponseFromJSON,
+    VerifyPayment200ResponseToJSON,
+} from '../models/VerifyPayment200Response';
 import {
     type VerifyPaymentRequest,
     VerifyPaymentRequestFromJSON,
     VerifyPaymentRequestToJSON,
 } from '../models/VerifyPaymentRequest';
 
-export interface 487c61ce04a9619a56693f5b75e0e9ceRequest {
-    payment: number;
-    verifyPaymentRequest: VerifyPaymentRequest;
-}
-
-export interface 5e2794ba3d3c64e70873367505e4a751Request {
+export interface PagosApiCreatePaymentRequest {
     studentId: number;
     amount: number;
     paymentDate: Date;
@@ -58,12 +53,17 @@ export interface 5e2794ba3d3c64e70873367505e4a751Request {
     receipt?: Blob;
 }
 
-export interface 826dc6b24dd704607aa018a59207dd96Request {
-    status?: 826dc6b24dd704607aa018a59207dd96StatusEnum;
+export interface PagosApiGetPaymentsRequest {
+    status?: GetPaymentsStatusEnum;
 }
 
-export interface C0d11adea38ecde3d94e4e281c72f01eRequest {
+export interface PagosApiShowPaymentRequest {
     payment: number;
+}
+
+export interface PagosApiVerifyPaymentOperationRequest {
+    payment: number;
+    verifyPaymentRequest: VerifyPaymentRequest;
 }
 
 /**
@@ -72,146 +72,34 @@ export interface C0d11adea38ecde3d94e4e281c72f01eRequest {
 export class PagosApi extends runtime.BaseAPI {
 
     /**
-     * Creates request options for _0b4da16a79c767828a756a8749652ba2 without sending the request
+     * Creates request options for createPayment without sending the request
      */
-    async _0b4da16a79c767828a756a8749652ba2RequestOpts(): Promise<runtime.RequestOpts> {
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        let urlPath = `/api/my-students`;
-
-        return {
-            path: urlPath,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        };
-    }
-
-    /**
-     * Obtiene la lista de los alumnos que el usuario logueado puede gestionar (él mismo si es alumno activo, o sus representados).
-     * Listar alumnos relacionados
-     */
-    async _0b4da16a79c767828a756a8749652ba2Raw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Model0b4da16a79c767828a756a8749652ba2200Response>> {
-        const requestOptions = await this._0b4da16a79c767828a756a8749652ba2RequestOpts();
-        const response = await this.request(requestOptions, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => Model0b4da16a79c767828a756a8749652ba2200ResponseFromJSON(jsonValue));
-    }
-
-    /**
-     * Obtiene la lista de los alumnos que el usuario logueado puede gestionar (él mismo si es alumno activo, o sus representados).
-     * Listar alumnos relacionados
-     */
-    async _0b4da16a79c767828a756a8749652ba2(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Model0b4da16a79c767828a756a8749652ba2200Response> {
-        const response = await this._0b4da16a79c767828a756a8749652ba2Raw(initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Creates request options for _487c61ce04a9619a56693f5b75e0e9ce without sending the request
-     */
-    async _487c61ce04a9619a56693f5b75e0e9ceRequestOpts(requestParameters: 487c61ce04a9619a56693f5b75e0e9ceRequest): Promise<runtime.RequestOpts> {
-        if (requestParameters['payment'] == null) {
-            throw new runtime.RequiredError(
-                'payment',
-                'Required parameter "payment" was null or undefined when calling _487c61ce04a9619a56693f5b75e0e9ce().'
-            );
-        }
-
-        if (requestParameters['verifyPaymentRequest'] == null) {
-            throw new runtime.RequiredError(
-                'verifyPaymentRequest',
-                'Required parameter "verifyPaymentRequest" was null or undefined when calling _487c61ce04a9619a56693f5b75e0e9ce().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        let urlPath = `/api/admin/payments/{payment}/verify`;
-        urlPath = urlPath.replace('{payment}', encodeURIComponent(String(requestParameters['payment'])));
-
-        return {
-            path: urlPath,
-            method: 'PUT',
-            headers: headerParameters,
-            query: queryParameters,
-            body: VerifyPaymentRequestToJSON(requestParameters['verifyPaymentRequest']),
-        };
-    }
-
-    /**
-     * Permite a un administrador aprobar o rechazar un pago. Si se aprueba, se genera automáticamente el recibo.
-     * Verificar pago (Administrador)
-     */
-    async _487c61ce04a9619a56693f5b75e0e9ceRaw(requestParameters: 487c61ce04a9619a56693f5b75e0e9ceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Model487c61ce04a9619a56693f5b75e0e9ce200Response>> {
-        const requestOptions = await this._487c61ce04a9619a56693f5b75e0e9ceRequestOpts(requestParameters);
-        const response = await this.request(requestOptions, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => Model487c61ce04a9619a56693f5b75e0e9ce200ResponseFromJSON(jsonValue));
-    }
-
-    /**
-     * Permite a un administrador aprobar o rechazar un pago. Si se aprueba, se genera automáticamente el recibo.
-     * Verificar pago (Administrador)
-     */
-    async _487c61ce04a9619a56693f5b75e0e9ce(requestParameters: 487c61ce04a9619a56693f5b75e0e9ceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Model487c61ce04a9619a56693f5b75e0e9ce200Response> {
-        const response = await this._487c61ce04a9619a56693f5b75e0e9ceRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Creates request options for _5e2794ba3d3c64e70873367505e4a751 without sending the request
-     */
-    async _5e2794ba3d3c64e70873367505e4a751RequestOpts(requestParameters: 5e2794ba3d3c64e70873367505e4a751Request): Promise<runtime.RequestOpts> {
+    async createPaymentRequestOpts(requestParameters: PagosApiCreatePaymentRequest): Promise<runtime.RequestOpts> {
         if (requestParameters['studentId'] == null) {
             throw new runtime.RequiredError(
                 'studentId',
-                'Required parameter "studentId" was null or undefined when calling _5e2794ba3d3c64e70873367505e4a751().'
+                'Required parameter "studentId" was null or undefined when calling createPayment().'
             );
         }
 
         if (requestParameters['amount'] == null) {
             throw new runtime.RequiredError(
                 'amount',
-                'Required parameter "amount" was null or undefined when calling _5e2794ba3d3c64e70873367505e4a751().'
+                'Required parameter "amount" was null or undefined when calling createPayment().'
             );
         }
 
         if (requestParameters['paymentDate'] == null) {
             throw new runtime.RequiredError(
                 'paymentDate',
-                'Required parameter "paymentDate" was null or undefined when calling _5e2794ba3d3c64e70873367505e4a751().'
+                'Required parameter "paymentDate" was null or undefined when calling createPayment().'
             );
         }
 
         if (requestParameters['paymentMethod'] == null) {
             throw new runtime.RequiredError(
                 'paymentMethod',
-                'Required parameter "paymentMethod" was null or undefined when calling _5e2794ba3d3c64e70873367505e4a751().'
+                'Required parameter "paymentMethod" was null or undefined when calling createPayment().'
             );
         }
 
@@ -283,26 +171,73 @@ export class PagosApi extends runtime.BaseAPI {
      * Permite a un alumno o representante registrar un nuevo pago adjuntando opcionalmente el comprobante digital (imagen o PDF).
      * Registrar un pago
      */
-    async _5e2794ba3d3c64e70873367505e4a751Raw(requestParameters: 5e2794ba3d3c64e70873367505e4a751Request, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Model5e2794ba3d3c64e70873367505e4a751201Response>> {
-        const requestOptions = await this._5e2794ba3d3c64e70873367505e4a751RequestOpts(requestParameters);
+    async createPaymentRaw(requestParameters: PagosApiCreatePaymentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreatePayment201Response>> {
+        const requestOptions = await this.createPaymentRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => Model5e2794ba3d3c64e70873367505e4a751201ResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => CreatePayment201ResponseFromJSON(jsonValue));
     }
 
     /**
      * Permite a un alumno o representante registrar un nuevo pago adjuntando opcionalmente el comprobante digital (imagen o PDF).
      * Registrar un pago
      */
-    async _5e2794ba3d3c64e70873367505e4a751(requestParameters: 5e2794ba3d3c64e70873367505e4a751Request, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Model5e2794ba3d3c64e70873367505e4a751201Response> {
-        const response = await this._5e2794ba3d3c64e70873367505e4a751Raw(requestParameters, initOverrides);
+    async createPayment(requestParameters: PagosApiCreatePaymentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreatePayment201Response> {
+        const response = await this.createPaymentRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Creates request options for _826dc6b24dd704607aa018a59207dd96 without sending the request
+     * Creates request options for getMyStudents without sending the request
      */
-    async _826dc6b24dd704607aa018a59207dd96RequestOpts(requestParameters: 826dc6b24dd704607aa018a59207dd96Request): Promise<runtime.RequestOpts> {
+    async getMyStudentsRequestOpts(): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/my-students`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Obtiene la lista de los alumnos que el usuario logueado puede gestionar (él mismo si es alumno activo, o sus representados).
+     * Listar alumnos relacionados
+     */
+    async getMyStudentsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetMyStudents200Response>> {
+        const requestOptions = await this.getMyStudentsRequestOpts();
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetMyStudents200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Obtiene la lista de los alumnos que el usuario logueado puede gestionar (él mismo si es alumno activo, o sus representados).
+     * Listar alumnos relacionados
+     */
+    async getMyStudents(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetMyStudents200Response> {
+        const response = await this.getMyStudentsRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for getPayments without sending the request
+     */
+    async getPaymentsRequestOpts(requestParameters: PagosApiGetPaymentsRequest): Promise<runtime.RequestOpts> {
         const queryParameters: any = {};
 
         if (requestParameters['status'] != null) {
@@ -334,30 +269,30 @@ export class PagosApi extends runtime.BaseAPI {
      * Obtiene la lista de pagos registrados. Los administradores ven todos los pagos (con filtro opcional por estado). Los usuarios estándar ven solo sus pagos y los de sus representados.
      * Listar pagos
      */
-    async _826dc6b24dd704607aa018a59207dd96Raw(requestParameters: 826dc6b24dd704607aa018a59207dd96Request, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Model826dc6b24dd704607aa018a59207dd96200Response>> {
-        const requestOptions = await this._826dc6b24dd704607aa018a59207dd96RequestOpts(requestParameters);
+    async getPaymentsRaw(requestParameters: PagosApiGetPaymentsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetPayments200Response>> {
+        const requestOptions = await this.getPaymentsRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => Model826dc6b24dd704607aa018a59207dd96200ResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetPayments200ResponseFromJSON(jsonValue));
     }
 
     /**
      * Obtiene la lista de pagos registrados. Los administradores ven todos los pagos (con filtro opcional por estado). Los usuarios estándar ven solo sus pagos y los de sus representados.
      * Listar pagos
      */
-    async _826dc6b24dd704607aa018a59207dd96(requestParameters: 826dc6b24dd704607aa018a59207dd96Request = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Model826dc6b24dd704607aa018a59207dd96200Response> {
-        const response = await this._826dc6b24dd704607aa018a59207dd96Raw(requestParameters, initOverrides);
+    async getPayments(requestParameters: PagosApiGetPaymentsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetPayments200Response> {
+        const response = await this.getPaymentsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Creates request options for c0d11adea38ecde3d94e4e281c72f01e without sending the request
+     * Creates request options for showPayment without sending the request
      */
-    async c0d11adea38ecde3d94e4e281c72f01eRequestOpts(requestParameters: C0d11adea38ecde3d94e4e281c72f01eRequest): Promise<runtime.RequestOpts> {
+    async showPaymentRequestOpts(requestParameters: PagosApiShowPaymentRequest): Promise<runtime.RequestOpts> {
         if (requestParameters['payment'] == null) {
             throw new runtime.RequiredError(
                 'payment',
-                'Required parameter "payment" was null or undefined when calling c0d11adea38ecde3d94e4e281c72f01e().'
+                'Required parameter "payment" was null or undefined when calling showPayment().'
             );
         }
 
@@ -389,19 +324,84 @@ export class PagosApi extends runtime.BaseAPI {
      * Obtiene la información detallada de un pago específico. Requiere permisos (ser el propietario, el representante del alumno, o administrador).
      * Ver detalle de un pago
      */
-    async c0d11adea38ecde3d94e4e281c72f01eRaw(requestParameters: C0d11adea38ecde3d94e4e281c72f01eRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<C0d11adea38ecde3d94e4e281c72f01e200Response>> {
-        const requestOptions = await this.c0d11adea38ecde3d94e4e281c72f01eRequestOpts(requestParameters);
+    async showPaymentRaw(requestParameters: PagosApiShowPaymentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShowPayment200Response>> {
+        const requestOptions = await this.showPaymentRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => C0d11adea38ecde3d94e4e281c72f01e200ResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ShowPayment200ResponseFromJSON(jsonValue));
     }
 
     /**
      * Obtiene la información detallada de un pago específico. Requiere permisos (ser el propietario, el representante del alumno, o administrador).
      * Ver detalle de un pago
      */
-    async c0d11adea38ecde3d94e4e281c72f01e(requestParameters: C0d11adea38ecde3d94e4e281c72f01eRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<C0d11adea38ecde3d94e4e281c72f01e200Response> {
-        const response = await this.c0d11adea38ecde3d94e4e281c72f01eRaw(requestParameters, initOverrides);
+    async showPayment(requestParameters: PagosApiShowPaymentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShowPayment200Response> {
+        const response = await this.showPaymentRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for verifyPayment without sending the request
+     */
+    async verifyPaymentRequestOpts(requestParameters: PagosApiVerifyPaymentOperationRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['payment'] == null) {
+            throw new runtime.RequiredError(
+                'payment',
+                'Required parameter "payment" was null or undefined when calling verifyPayment().'
+            );
+        }
+
+        if (requestParameters['verifyPaymentRequest'] == null) {
+            throw new runtime.RequiredError(
+                'verifyPaymentRequest',
+                'Required parameter "verifyPaymentRequest" was null or undefined when calling verifyPayment().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/admin/payments/{payment}/verify`;
+        urlPath = urlPath.replace('{payment}', encodeURIComponent(String(requestParameters['payment'])));
+
+        return {
+            path: urlPath,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: VerifyPaymentRequestToJSON(requestParameters['verifyPaymentRequest']),
+        };
+    }
+
+    /**
+     * Permite a un administrador aprobar o rechazar un pago. Si se aprueba, se genera automáticamente el recibo.
+     * Verificar pago (Administrador)
+     */
+    async verifyPaymentRaw(requestParameters: PagosApiVerifyPaymentOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<VerifyPayment200Response>> {
+        const requestOptions = await this.verifyPaymentRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => VerifyPayment200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Permite a un administrador aprobar o rechazar un pago. Si se aprueba, se genera automáticamente el recibo.
+     * Verificar pago (Administrador)
+     */
+    async verifyPayment(requestParameters: PagosApiVerifyPaymentOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<VerifyPayment200Response> {
+        const response = await this.verifyPaymentRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -410,9 +410,9 @@ export class PagosApi extends runtime.BaseAPI {
 /**
  * @export
  */
-export const 826dc6b24dd704607aa018a59207dd96StatusEnum = {
+export const GetPaymentsStatusEnum = {
     Pending: 'PENDING',
     Approved: 'APPROVED',
     Rejected: 'REJECTED'
 } as const;
-export type 826dc6b24dd704607aa018a59207dd96StatusEnum = typeof 826dc6b24dd704607aa018a59207dd96StatusEnum[keyof typeof 826dc6b24dd704607aa018a59207dd96StatusEnum];
+export type GetPaymentsStatusEnum = typeof GetPaymentsStatusEnum[keyof typeof GetPaymentsStatusEnum];

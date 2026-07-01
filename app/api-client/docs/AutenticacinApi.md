@@ -4,79 +4,15 @@ All URIs are relative to *http://localhost:8000*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**_03afb12b342c2ea43bdc1de4f39e91a8**](AutenticacinApi.md#_03afb12b342c2ea43bdc1de4f39e91a8) | **POST** /logout | Cerrar sesión |
-| [**_42f77e072dec84b0e1094cca1228298e**](AutenticacinApi.md#_42f77e072dec84b0e1094cca1228298e) | **POST** /login | Iniciar sesión |
-| [**_573de1fed352c1205a32c4d1b9877375**](AutenticacinApi.md#_573de1fed352c1205a32c4d1b9877375) | **POST** /register | Registrar un nuevo usuario |
+| [**login**](AutenticacinApi.md#loginoperation) | **POST** /api/login | Iniciar sesión |
+| [**logout**](AutenticacinApi.md#logout) | **POST** /api/logout | Cerrar sesión |
+| [**register**](AutenticacinApi.md#registeroperation) | **POST** /register | Registrar un nuevo usuario |
 
 
 
-## _03afb12b342c2ea43bdc1de4f39e91a8
+## login
 
-> Model03afb12b342c2ea43bdc1de4f39e91a8200Response _03afb12b342c2ea43bdc1de4f39e91a8()
-
-Cerrar sesión
-
-Invalida el token JWT del usuario autenticado.
-
-### Example
-
-```ts
-import {
-  Configuration,
-  AutenticacinApi,
-} from '';
-import type { 03afb12b342c2ea43bdc1de4f39e91a8Request } from '';
-
-async function example() {
-  console.log("🚀 Testing  SDK...");
-  const config = new Configuration({ 
-    // Configure HTTP bearer authorization: bearerAuth
-    accessToken: "YOUR BEARER TOKEN",
-  });
-  const api = new AutenticacinApi(config);
-
-  try {
-    const data = await api._03afb12b342c2ea43bdc1de4f39e91a8();
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Run the test
-example().catch(console.error);
-```
-
-### Parameters
-
-This endpoint does not need any parameter.
-
-### Return type
-
-[**Model03afb12b342c2ea43bdc1de4f39e91a8200Response**](Model03afb12b342c2ea43bdc1de4f39e91a8200Response.md)
-
-### Authorization
-
-[bearerAuth](../README.md#bearerAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: `application/json`
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | Sesión cerrada con éxito |  -  |
-| **401** | No autorizado |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
-
-
-## _42f77e072dec84b0e1094cca1228298e
-
-> Model42f77e072dec84b0e1094cca1228298e200Response _42f77e072dec84b0e1094cca1228298e(loginRequest)
+> Login200Response login(loginRequest)
 
 Iniciar sesión
 
@@ -89,7 +25,7 @@ import {
   Configuration,
   AutenticacinApi,
 } from '';
-import type { 42f77e072dec84b0e1094cca1228298eRequest } from '';
+import type { LoginOperationRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
@@ -98,10 +34,10 @@ async function example() {
   const body = {
     // LoginRequest
     loginRequest: ...,
-  } satisfies 42f77e072dec84b0e1094cca1228298eRequest;
+  } satisfies LoginOperationRequest;
 
   try {
-    const data = await api._42f77e072dec84b0e1094cca1228298e(body);
+    const data = await api.login(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -121,7 +57,7 @@ example().catch(console.error);
 
 ### Return type
 
-[**Model42f77e072dec84b0e1094cca1228298e200Response**](Model42f77e072dec84b0e1094cca1228298e200Response.md)
+[**Login200Response**](Login200Response.md)
 
 ### Authorization
 
@@ -142,9 +78,73 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## _573de1fed352c1205a32c4d1b9877375
+## logout
 
-> Model573de1fed352c1205a32c4d1b9877375201Response _573de1fed352c1205a32c4d1b9877375(registerRequest)
+> Logout200Response logout()
+
+Cerrar sesión
+
+Invalida el token JWT del usuario autenticado.
+
+### Example
+
+```ts
+import {
+  Configuration,
+  AutenticacinApi,
+} from '';
+import type { LogoutRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: bearerAuth
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new AutenticacinApi(config);
+
+  try {
+    const data = await api.logout();
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+This endpoint does not need any parameter.
+
+### Return type
+
+[**Logout200Response**](Logout200Response.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Sesión cerrada con éxito |  -  |
+| **401** | No autorizado |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## register
+
+> Register201Response register(registerRequest)
 
 Registrar un nuevo usuario
 
@@ -157,7 +157,7 @@ import {
   Configuration,
   AutenticacinApi,
 } from '';
-import type { 573de1fed352c1205a32c4d1b9877375Request } from '';
+import type { RegisterOperationRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
@@ -166,10 +166,10 @@ async function example() {
   const body = {
     // RegisterRequest
     registerRequest: ...,
-  } satisfies 573de1fed352c1205a32c4d1b9877375Request;
+  } satisfies RegisterOperationRequest;
 
   try {
-    const data = await api._573de1fed352c1205a32c4d1b9877375(body);
+    const data = await api.register(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -189,7 +189,7 @@ example().catch(console.error);
 
 ### Return type
 
-[**Model573de1fed352c1205a32c4d1b9877375201Response**](Model573de1fed352c1205a32c4d1b9877375201Response.md)
+[**Register201Response**](Register201Response.md)
 
 ### Authorization
 

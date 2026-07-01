@@ -186,10 +186,29 @@ export function Sidebar() {
                 <span className={`transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>Panel Administrativo</span>
             </NavLink>
 
-            <NavLink to="/dashboard/users" className={linkClass} title={!isExpanded ? "Usuarios" : undefined}>
-              <FaUsers className="mr-3 text-lg min-w-[1.125rem]" />
-              <span className={`transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>Usuarios</span>
-            </NavLink>
+            <CollapsibleItem 
+                title="Usuarios" 
+                id="users" 
+                isActivePath={location.pathname.includes('/dashboard/users')}
+                icon={FaUsers}
+            >
+              <NavLink to="/dashboard/users" end className={subLinkClass}>
+                {({ isActive }) => (
+                  <>
+                    <GoDotFill className={`mr-2 text-xs ${isActive ? "text-golden-rod-400" : "text-gray-500 group-hover:text-white"}`} />
+                    Listado
+                  </>
+                )}
+              </NavLink>
+              <NavLink to="/dashboard/users/create" className={subLinkClass}>
+                {({ isActive }) => (
+                  <>
+                    <GoDotFill className={`mr-2 text-xs ${isActive ? "text-golden-rod-400" : "text-gray-500 group-hover:text-white"}`} />
+                    Crear Nuevo
+                  </>
+                )}
+              </NavLink>
+            </CollapsibleItem>
             
             <CollapsibleItem 
                 title="Alumnos" 

@@ -1,54 +1,15 @@
 import { useParams, Link, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
-import { FaUser, FaSave, FaKey, FaArrowLeft, FaPlus } from "react-icons/fa";
+import { FaUser, FaSave, FaKey, FaArrowLeft, FaPlus, FaBan } from "react-icons/fa";
 import { IoMdSchool, IoMdCash } from "react-icons/io";
 import { Input } from "~/components/atoms/Input";
 import { Select } from "~/components/atoms/Select";
 import { Button } from "~/components/atoms/Button";
+import { AdministracinRepresentantesApi } from "@/api-client";
+import { getApiClient } from "@/utils/api-client";
+import Toastify from 'toastify-js';
 
-// Mock Data (Duplicated from index.tsx for now - in real app, fetch from API)
-const mockUsers = [
-    {
-      id: 1,
-      name: "Juan Pérez",
-      email: "juan.perez@email.com",
-      role: "Padre/Tutor",
-      status: "active",
-      students: [
-        { name: "Luis Hernández", rank: "7mo Kyu", image: "https://ui-avatars.com/api/?name=Luis+Hernandez&background=FFD700&color=000&size=64" },
-        { name: "María Hernández", rank: "9no Kyu", image: "https://ui-avatars.com/api/?name=Maria+Hernandez&background=FFC0CB&color=000&size=64" }
-      ]
-    },
-    {
-      id: 2,
-      name: "Ana Gómez",
-      email: "ana.gomez@email.com",
-      role: "Alumno Adulto",
-      status: "active",
-      students: [
-        { name: "Ana Gómez", rank: "4to Kyu", image: "https://ui-avatars.com/api/?name=Ana+Gomez&background=0000FF&color=FFF&size=64" }
-      ]
-    },
-    {
-      id: 3,
-      name: "Carlos Rodríguez",
-      email: "carlos.r@email.com",
-      role: "Padre/Tutor",
-      status: "inactive",
-      students: [
-        { name: "Pedro Rodríguez", rank: "8vo Kyu", image: "https://ui-avatars.com/api/?name=Pedro+Rodriguez&background=FFA500&color=000&size=64" }
-      ]
-    },
-     {
-      id: 4,
-      name: "Minarai Admin",
-      email: "admin@minarai.com",
-      role: "Administrador",
-      status: "active",
-      students: []
-    }
-];
-
+// Mock User Payments (keep for now until payments are fully integrated in this view)
 const mockUserPayments = [
     { id: 101, date: '2024-02-01', amount: '$50.00', reference: 'REF-123', status: 'approved' },
     { id: 102, date: '2024-01-15', amount: '$50.00', reference: 'REF-456', status: 'approved' },
@@ -62,33 +23,85 @@ export function meta({}: any) {
 export default function UserProfile() {
     const { userId } = useParams();
     const navigate = useNavigate();
-    const user = mockUsers.find(u => u.id === Number(userId));
-
+    
+    const [user, setUser] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<'students' | 'payments'>('students');
     const [formData, setFormData] = useState({
         name: "",
+        surname: "",
         email: "",
         role: "",
         status: ""
     });
 
-    useEffect(() => {
-        if (user) {
-            setFormData({
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                status: user.status
-            });
+    const fetchUser = async () => {
+        if (!userId) return;
+        setLoading(true);
+        try {
+            const client = getApiClient(AdministracinRepresentantesApi);
+            const response = await client.showRepresentativeRaw({ user: Number(userId) });
+            const data = await response.raw.json();
+            const userData = data.data;
+            if (userData) {
+                setUser(userData);
+                setFormData({
+                    name: userData.name,
+                    surname: userData.surname || "",
+                    email: userData.email,
+                    role: userData.role,
+                    status: userData.status
+                });
+            }
+        } catch (error) {
+            console.error("Error fetching user profile:", error);
+        } finally {
+            setLoading(false);
         }
-    }, [user]);
+    };
+
+    useEffect(() => {
+        fetchUser();
+    }, [userId]);
+
+    if (loading) {
+        return (
+            <div className="flex h-full items-center justify-center">
+                <div className="w-12 h-12 border-4 border-golden-rod-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+        );
+    }
 
     if (!user) {
         return <div className="p-8 text-center text-gray-500">Usuario no encontrado.</div>;
     }
 
     const handleSave = () => {
-        alert("Usuario guardado (Mock)");
+        alert("Usuario guardado (Mock - falta API PUT/PATCH para actualizar datos básicos)");
+    };
+
+    const handleDeactivate = async () => {
+        if (confirm("¿Estás seguro de suspender esta cuenta? Se desactivará el acceso para el representante y todos sus alumnos.")) {
+            try {
+                const client = getApiClient(AdministracinRepresentantesApi);
+                await client.deactivateRepresentative({ user: Number(userId) });
+                Toastify({
+                    text: "Cuenta suspendida exitosamente",
+                    duration: 3000,
+                    gravity: "top", position: "right",
+                    style: { background: "linear-gradient(to right, #00b09b, #96c93d)" },
+                }).showToast();
+                fetchUser(); // Refresh data
+            } catch (error) {
+                console.error("Error deactivating user:", error);
+                Toastify({
+                    text: "Error al suspender la cuenta",
+                    duration: 3000,
+                    gravity: "top", position: "right",
+                    style: { background: "linear-gradient(to right, #ff5f6d, #ffc371)" },
+                }).showToast();
+            }
+        }
     };
 
     const handleResetPassword = () => {
@@ -104,14 +117,21 @@ export default function UserProfile() {
     return (
         <div className="space-y-6 animate-fade-in font-raleway h-full flex flex-col pb-10">
             {/* Header */}
-            <div className="flex items-center gap-4">
-                <button onClick={() => navigate(-1)} className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                    <FaArrowLeft />
-                </button>
-                <div>
-                     <h1 className="text-2xl font-bold text-gray-900 font-bebas tracking-wide">Perfil de Usuario</h1>
-                     <p className="text-gray-500 text-sm">Gestiona la información, alumnos y pagos de {user.name}.</p>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                    <button onClick={() => navigate(-1)} className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                        <FaArrowLeft />
+                    </button>
+                    <div>
+                         <h1 className="text-2xl font-bold text-gray-900 font-bebas tracking-wide">Perfil de Usuario</h1>
+                         <p className="text-gray-500 text-sm">Gestiona la información, alumnos y pagos de {user.name}.</p>
+                    </div>
                 </div>
+                {user.status === 'active' && (
+                    <Button variant="danger" icon={<FaBan />} onClick={handleDeactivate} className="bg-red-500 hover:bg-red-600 border-none text-white shadow-lg">
+                        Suspender Cuenta
+                    </Button>
+                )}
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -130,9 +150,14 @@ export default function UserProfile() {
 
                         <div className="space-y-4">
                             <Input 
-                                label="Nombre Completo" 
+                                label="Nombre" 
                                 value={formData.name} 
                                 onChange={(e) => setFormData({...formData, name: e.target.value})}
+                            />
+                            <Input 
+                                label="Apellido" 
+                                value={formData.surname} 
+                                onChange={(e) => setFormData({...formData, surname: e.target.value})}
                             />
                              <div className="space-y-2">
                                 <Input 
@@ -223,14 +248,16 @@ export default function UserProfile() {
                                     </div>
                                     
                                     <div className="space-y-3">
-                                        {user.students.length > 0 ? user.students.map((student, idx) => (
+                                        {user.students && user.students.length > 0 ? user.students.map((student: any, idx: number) => (
                                             <div key={idx} className="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-100 hover:border-golden-rod-200 transition-colors group">
-                                                <img className="h-12 w-12 rounded-full object-cover mr-4" src={student.image} alt={student.name} />
-                                                <div className="flex-1">
-                                                    <h4 className="text-base font-bold text-gray-900">{student.name}</h4>
-                                                    <p className="text-sm text-gray-500">{student.rank}</p>
+                                                <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600 mr-4">
+                                                    {student.name.charAt(0)}
                                                 </div>
-                                                <Link to={`/dashboard/students/${idx + 1}`} className="text-sm font-bold text-gray-400 group-hover:text-golden-rod-600 transition-colors">
+                                                <div className="flex-1">
+                                                    <h4 className="text-base font-bold text-gray-900">{student.name} {student.surname}</h4>
+                                                    <p className="text-sm text-gray-500">{student.rank || 'Sin rango asignado'}</p>
+                                                </div>
+                                                <Link to={`/dashboard/students/${student.id}`} className="text-sm font-bold text-gray-400 group-hover:text-golden-rod-600 transition-colors">
                                                     Ver Perfil
                                                 </Link>
                                             </div>

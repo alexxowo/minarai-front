@@ -47,11 +47,36 @@ Para lograr una aplicación fluida tanto en dispositivos móviles como en pantal
 
 - **Centralización**: Los hooks genéricos deben guardarse en `app/hooks/` (e.g. `useUrlModal`, `useMediaQuery`).
 - **Zustand Stores**: Mantén las tiendas globales en `app/store/` (e.g. `useAuthStore`). Solo almacena datos que realmente necesiten ser compartidos transversalmente (sesiones, temas, preferencias globales).
-- **Consumo de APIs**: Toda interacción con el backend debe realizarse a través del cliente autogenerado en `app/api-client/` para mantener consistencia de tipos con la OpenAPI del backend.
 
 ---
 
-## 5. Directrices de PWA
+## 5. Consumo de API y Manejo de Peticiones (Fetch y TanStack Query)
+
+Toda interacción con el backend debe seguir las siguientes pautas:
+
+- **Generación del Cliente**: Se utiliza `app/api-client/` para importar los modelos del backend y los clientes autogenerados. Este cliente se basa en la API `fetch` nativa de JavaScript.
+- **TanStack Query**: Para gestionar el estado de las peticiones, caché, reintentos y estados de carga (`isLoading`, `isError`), se utiliza `@tanstack/react-query` (específicamente `useQuery` y `useMutation`).
+- **Wrapper / Interceptor de Errores**:
+  - Debe implementarse un wrapper personalizado (o un custom query hook / fetch handler) que envuelva la ejecución de las promesas de `api-client`.
+  - Este wrapper debe interceptar errores de red, respuestas no exitosas (e.g., status >= 400), controlar fallas de autenticación (como redireccionar al login en caso de 401) y mostrar notificaciones amigables al usuario (mediante toast u otros componentes de UI).
+  - Ejemplo conceptual del wrapper:
+    ```typescript
+    export async function apiWrapper<T>(requestPromise: Promise<T>): Promise<T> {
+      try {
+        return await requestPromise;
+      } catch (error: any) {
+        // Lógica de control de errores generalizada
+        if (error.status === 401) {
+          // Desloguear / Redireccionar
+        }
+        throw error;
+      }
+    }
+    ```
+
+---
+
+## 6. Directrices de PWA
 
 - **Manifiesto**: Ubicado en `public/site.webmanifest`. Define el nombre de la app, colores de tema y los iconos maskables necesarios para dispositivos móviles.
 - **Configuración de Viewport**: El viewport debe ser siempre responsivo e impedir zooms no deseados en inputs de dispositivos iOS/Android:

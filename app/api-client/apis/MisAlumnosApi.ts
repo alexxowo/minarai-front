@@ -14,7 +14,7 @@
 
 import * as runtime from '../runtime';
 
-export interface 512fc0834b47f246a9c70a793486bed6Request {
+export interface MisAlumnosApiShowMyStudentRequest {
     student: number;
 }
 
@@ -24,9 +24,9 @@ export interface 512fc0834b47f246a9c70a793486bed6Request {
 export class MisAlumnosApi extends runtime.BaseAPI {
 
     /**
-     * Creates request options for _0d507af438d337a3bf3a92bf89515f5f without sending the request
+     * Creates request options for enrollMyStudent without sending the request
      */
-    async _0d507af438d337a3bf3a92bf89515f5fRequestOpts(): Promise<runtime.RequestOpts> {
+    async enrollMyStudentRequestOpts(): Promise<runtime.RequestOpts> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -54,8 +54,8 @@ export class MisAlumnosApi extends runtime.BaseAPI {
      * Permite al representante registrar a sus representados o auto-inscribirse como alumno.
      * Auto-inscribirse o inscribir un representado
      */
-    async _0d507af438d337a3bf3a92bf89515f5fRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        const requestOptions = await this._0d507af438d337a3bf3a92bf89515f5fRequestOpts();
+    async enrollMyStudentRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.enrollMyStudentRequestOpts();
         const response = await this.request(requestOptions, initOverrides);
 
         return new runtime.VoidApiResponse(response);
@@ -65,18 +65,64 @@ export class MisAlumnosApi extends runtime.BaseAPI {
      * Permite al representante registrar a sus representados o auto-inscribirse como alumno.
      * Auto-inscribirse o inscribir un representado
      */
-    async _0d507af438d337a3bf3a92bf89515f5f(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this._0d507af438d337a3bf3a92bf89515f5fRaw(initOverrides);
+    async enrollMyStudent(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.enrollMyStudentRaw(initOverrides);
     }
 
     /**
-     * Creates request options for _512fc0834b47f246a9c70a793486bed6 without sending the request
+     * Creates request options for getMyStudentsList without sending the request
      */
-    async _512fc0834b47f246a9c70a793486bed6RequestOpts(requestParameters: 512fc0834b47f246a9c70a793486bed6Request): Promise<runtime.RequestOpts> {
+    async getMyStudentsListRequestOpts(): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/my-students-list`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Obtiene los alumnos asociados al representante autenticado o a sí mismo.
+     * Listar mis alumnos representados
+     */
+    async getMyStudentsListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.getMyStudentsListRequestOpts();
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Obtiene los alumnos asociados al representante autenticado o a sí mismo.
+     * Listar mis alumnos representados
+     */
+    async getMyStudentsList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.getMyStudentsListRaw(initOverrides);
+    }
+
+    /**
+     * Creates request options for showMyStudent without sending the request
+     */
+    async showMyStudentRequestOpts(requestParameters: MisAlumnosApiShowMyStudentRequest): Promise<runtime.RequestOpts> {
         if (requestParameters['student'] == null) {
             throw new runtime.RequiredError(
                 'student',
-                'Required parameter "student" was null or undefined when calling _512fc0834b47f246a9c70a793486bed6().'
+                'Required parameter "student" was null or undefined when calling showMyStudent().'
             );
         }
 
@@ -108,8 +154,8 @@ export class MisAlumnosApi extends runtime.BaseAPI {
      * Obtiene la ficha de un alumno propio o representado.
      * Ver detalle de un alumno representado
      */
-    async _512fc0834b47f246a9c70a793486bed6Raw(requestParameters: 512fc0834b47f246a9c70a793486bed6Request, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        const requestOptions = await this._512fc0834b47f246a9c70a793486bed6RequestOpts(requestParameters);
+    async showMyStudentRaw(requestParameters: MisAlumnosApiShowMyStudentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.showMyStudentRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
         return new runtime.VoidApiResponse(response);
@@ -119,54 +165,8 @@ export class MisAlumnosApi extends runtime.BaseAPI {
      * Obtiene la ficha de un alumno propio o representado.
      * Ver detalle de un alumno representado
      */
-    async _512fc0834b47f246a9c70a793486bed6(requestParameters: 512fc0834b47f246a9c70a793486bed6Request, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this._512fc0834b47f246a9c70a793486bed6Raw(requestParameters, initOverrides);
-    }
-
-    /**
-     * Creates request options for c6342066736a9dd30cdec73bf284a791 without sending the request
-     */
-    async c6342066736a9dd30cdec73bf284a791RequestOpts(): Promise<runtime.RequestOpts> {
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        let urlPath = `/api/my-students-list`;
-
-        return {
-            path: urlPath,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        };
-    }
-
-    /**
-     * Obtiene los alumnos asociados al representante autenticado o a sí mismo.
-     * Listar mis alumnos representados
-     */
-    async c6342066736a9dd30cdec73bf284a791Raw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        const requestOptions = await this.c6342066736a9dd30cdec73bf284a791RequestOpts();
-        const response = await this.request(requestOptions, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     * Obtiene los alumnos asociados al representante autenticado o a sí mismo.
-     * Listar mis alumnos representados
-     */
-    async c6342066736a9dd30cdec73bf284a791(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.c6342066736a9dd30cdec73bf284a791Raw(initOverrides);
+    async showMyStudent(requestParameters: MisAlumnosApiShowMyStudentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.showMyStudentRaw(requestParameters, initOverrides);
     }
 
 }

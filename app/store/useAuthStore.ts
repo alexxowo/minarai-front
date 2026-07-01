@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { authApiClient } from '../utils/api-client';
 
 interface User {
   id: string;
@@ -13,7 +14,7 @@ interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   token: string | null;
-  login: (credentials: { email: string }) => Promise<void>;
+  login: (credentials: { email: string; password?: string }) => Promise<void>;
   logout: () => void;
   isSidebarCollapsed: boolean;
   toggleSidebar: () => void;
@@ -25,25 +26,33 @@ export const useAuthStore = create<AuthState>()(
       user: null as User | null,
       isAuthenticated: false,
       token: null,
-      login: async ({ email }) => {
-        // Mock API call
-        await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate delay
+      login: async ({ email, password }) => {
+        const response = await authApiClient.login(email, password);
         
-        const role = email.includes('admin') ? 'admin' : 'learner';
-        
-        set({
-          user: {
-            id: '1',
-            name: role === 'admin' ? 'Minarai Admin' : 'Minarai User',
-            email,
-            role,
+        if (response && response.data && response.data.accessToken && response.data.user) {
+          const apiUser = response.data.user;
+          const mappedUser: User = {
+            id: String(apiUser.id || ''),
+            name: `${apiUser.firstName || ''} ${apiUser.lastName || ''}`.trim() || 'Minarai User',
+            email: apiUser.email || email,
+            role: String(apiUser.role || 'USER').toLowerCase(), // "admin" or "user"
             image: undefined,
-          },
-          isAuthenticated: true,
-          token: 'mock-jwt-token',
-        });
+          };
+          
+          set({
+            user: mappedUser,
+            isAuthenticated: true,
+            token: response.data.accessToken,
+          });
+        } else {
+          throw new Error("Respuesta inválida del servidor al iniciar sesión.");
+        }
       },
-      logout: () => set({ user: null, isAuthenticated: false, token: null }),
+      logout: () => {
+        // Optional: Call logout endpoint asynchronously
+        authApiClient.logout().catch((err: any) => console.error('Logout error on server:', err));
+        set({ user: null, isAuthenticated: false, token: null });
+      },
       isSidebarCollapsed: false,
       toggleSidebar: () => set((state) => ({ isSidebarCollapsed: !state.isSidebarCollapsed })),
     }),

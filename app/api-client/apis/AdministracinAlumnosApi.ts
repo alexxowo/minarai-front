@@ -14,15 +14,15 @@
 
 import * as runtime from '../runtime';
 
-export interface 4f55fdb476bc5d5f099e21fd78b8c84fRequest {
+export interface AdministracinAlumnosApiShowStudentRequest {
     student: number;
 }
 
-export interface 73dbbc5d6a42e6594ebcee2fa13ef6e4Request {
+export interface AdministracinAlumnosApiToggleStudentStatusRequest {
     student: number;
 }
 
-export interface E7ea3c55affeb8fce01d20ba96514815Request {
+export interface AdministracinAlumnosApiUpdateStudentRequest {
     student: number;
 }
 
@@ -32,9 +32,55 @@ export interface E7ea3c55affeb8fce01d20ba96514815Request {
 export class AdministracinAlumnosApi extends runtime.BaseAPI {
 
     /**
-     * Creates request options for _043be570e56f8ff7a31e3ae3694c93c9 without sending the request
+     * Creates request options for enrollStudent without sending the request
      */
-    async _043be570e56f8ff7a31e3ae3694c93c9RequestOpts(): Promise<runtime.RequestOpts> {
+    async enrollStudentRequestOpts(): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/admin/students`;
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Registra un alumno con rango manual (Solo Admin).
+     * Inscribir un nuevo alumno
+     */
+    async enrollStudentRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.enrollStudentRequestOpts();
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Registra un alumno con rango manual (Solo Admin).
+     * Inscribir un nuevo alumno
+     */
+    async enrollStudent(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.enrollStudentRaw(initOverrides);
+    }
+
+    /**
+     * Creates request options for getStudents without sending the request
+     */
+    async getStudentsRequestOpts(): Promise<runtime.RequestOpts> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -62,8 +108,8 @@ export class AdministracinAlumnosApi extends runtime.BaseAPI {
      * Obtiene la lista completa de alumnos inscritos (Solo Admin).
      * Listar todos los alumnos
      */
-    async _043be570e56f8ff7a31e3ae3694c93c9Raw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        const requestOptions = await this._043be570e56f8ff7a31e3ae3694c93c9RequestOpts();
+    async getStudentsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.getStudentsRequestOpts();
         const response = await this.request(requestOptions, initOverrides);
 
         return new runtime.VoidApiResponse(response);
@@ -73,18 +119,72 @@ export class AdministracinAlumnosApi extends runtime.BaseAPI {
      * Obtiene la lista completa de alumnos inscritos (Solo Admin).
      * Listar todos los alumnos
      */
-    async _043be570e56f8ff7a31e3ae3694c93c9(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this._043be570e56f8ff7a31e3ae3694c93c9Raw(initOverrides);
+    async getStudents(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.getStudentsRaw(initOverrides);
     }
 
     /**
-     * Creates request options for _4f55fdb476bc5d5f099e21fd78b8c84f without sending the request
+     * Creates request options for showStudent without sending the request
      */
-    async _4f55fdb476bc5d5f099e21fd78b8c84fRequestOpts(requestParameters: 4f55fdb476bc5d5f099e21fd78b8c84fRequest): Promise<runtime.RequestOpts> {
+    async showStudentRequestOpts(requestParameters: AdministracinAlumnosApiShowStudentRequest): Promise<runtime.RequestOpts> {
         if (requestParameters['student'] == null) {
             throw new runtime.RequiredError(
                 'student',
-                'Required parameter "student" was null or undefined when calling _4f55fdb476bc5d5f099e21fd78b8c84f().'
+                'Required parameter "student" was null or undefined when calling showStudent().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/admin/students/{student}`;
+        urlPath = urlPath.replace('{student}', encodeURIComponent(String(requestParameters['student'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Obtiene la información de un alumno específico (Solo Admin).
+     * Ver ficha de un alumno
+     */
+    async showStudentRaw(requestParameters: AdministracinAlumnosApiShowStudentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.showStudentRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Obtiene la información de un alumno específico (Solo Admin).
+     * Ver ficha de un alumno
+     */
+    async showStudent(requestParameters: AdministracinAlumnosApiShowStudentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.showStudentRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Creates request options for toggleStudentStatus without sending the request
+     */
+    async toggleStudentStatusRequestOpts(requestParameters: AdministracinAlumnosApiToggleStudentStatusRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['student'] == null) {
+            throw new runtime.RequiredError(
+                'student',
+                'Required parameter "student" was null or undefined when calling toggleStudentStatus().'
             );
         }
 
@@ -116,8 +216,8 @@ export class AdministracinAlumnosApi extends runtime.BaseAPI {
      * Permite suspender o dar de alta a un alumno (Solo Admin).
      * Cambiar estado activo
      */
-    async _4f55fdb476bc5d5f099e21fd78b8c84fRaw(requestParameters: 4f55fdb476bc5d5f099e21fd78b8c84fRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        const requestOptions = await this._4f55fdb476bc5d5f099e21fd78b8c84fRequestOpts(requestParameters);
+    async toggleStudentStatusRaw(requestParameters: AdministracinAlumnosApiToggleStudentStatusRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.toggleStudentStatusRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
         return new runtime.VoidApiResponse(response);
@@ -127,118 +227,18 @@ export class AdministracinAlumnosApi extends runtime.BaseAPI {
      * Permite suspender o dar de alta a un alumno (Solo Admin).
      * Cambiar estado activo
      */
-    async _4f55fdb476bc5d5f099e21fd78b8c84f(requestParameters: 4f55fdb476bc5d5f099e21fd78b8c84fRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this._4f55fdb476bc5d5f099e21fd78b8c84fRaw(requestParameters, initOverrides);
+    async toggleStudentStatus(requestParameters: AdministracinAlumnosApiToggleStudentStatusRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.toggleStudentStatusRaw(requestParameters, initOverrides);
     }
 
     /**
-     * Creates request options for _73dbbc5d6a42e6594ebcee2fa13ef6e4 without sending the request
+     * Creates request options for updateStudent without sending the request
      */
-    async _73dbbc5d6a42e6594ebcee2fa13ef6e4RequestOpts(requestParameters: 73dbbc5d6a42e6594ebcee2fa13ef6e4Request): Promise<runtime.RequestOpts> {
+    async updateStudentRequestOpts(requestParameters: AdministracinAlumnosApiUpdateStudentRequest): Promise<runtime.RequestOpts> {
         if (requestParameters['student'] == null) {
             throw new runtime.RequiredError(
                 'student',
-                'Required parameter "student" was null or undefined when calling _73dbbc5d6a42e6594ebcee2fa13ef6e4().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        let urlPath = `/api/admin/students/{student}`;
-        urlPath = urlPath.replace('{student}', encodeURIComponent(String(requestParameters['student'])));
-
-        return {
-            path: urlPath,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        };
-    }
-
-    /**
-     * Obtiene la información de un alumno específico (Solo Admin).
-     * Ver ficha de un alumno
-     */
-    async _73dbbc5d6a42e6594ebcee2fa13ef6e4Raw(requestParameters: 73dbbc5d6a42e6594ebcee2fa13ef6e4Request, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        const requestOptions = await this._73dbbc5d6a42e6594ebcee2fa13ef6e4RequestOpts(requestParameters);
-        const response = await this.request(requestOptions, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     * Obtiene la información de un alumno específico (Solo Admin).
-     * Ver ficha de un alumno
-     */
-    async _73dbbc5d6a42e6594ebcee2fa13ef6e4(requestParameters: 73dbbc5d6a42e6594ebcee2fa13ef6e4Request, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this._73dbbc5d6a42e6594ebcee2fa13ef6e4Raw(requestParameters, initOverrides);
-    }
-
-    /**
-     * Creates request options for _961d499e9711c8b48daa3e2612ab2014 without sending the request
-     */
-    async _961d499e9711c8b48daa3e2612ab2014RequestOpts(): Promise<runtime.RequestOpts> {
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        let urlPath = `/api/admin/students`;
-
-        return {
-            path: urlPath,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-        };
-    }
-
-    /**
-     * Registra un alumno con rango manual (Solo Admin).
-     * Inscribir un nuevo alumno
-     */
-    async _961d499e9711c8b48daa3e2612ab2014Raw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        const requestOptions = await this._961d499e9711c8b48daa3e2612ab2014RequestOpts();
-        const response = await this.request(requestOptions, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     * Registra un alumno con rango manual (Solo Admin).
-     * Inscribir un nuevo alumno
-     */
-    async _961d499e9711c8b48daa3e2612ab2014(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this._961d499e9711c8b48daa3e2612ab2014Raw(initOverrides);
-    }
-
-    /**
-     * Creates request options for e7ea3c55affeb8fce01d20ba96514815 without sending the request
-     */
-    async e7ea3c55affeb8fce01d20ba96514815RequestOpts(requestParameters: E7ea3c55affeb8fce01d20ba96514815Request): Promise<runtime.RequestOpts> {
-        if (requestParameters['student'] == null) {
-            throw new runtime.RequiredError(
-                'student',
-                'Required parameter "student" was null or undefined when calling e7ea3c55affeb8fce01d20ba96514815().'
+                'Required parameter "student" was null or undefined when calling updateStudent().'
             );
         }
 
@@ -270,8 +270,8 @@ export class AdministracinAlumnosApi extends runtime.BaseAPI {
      * Actualiza los datos del alumno (Solo Admin).
      * Modificar alumno
      */
-    async e7ea3c55affeb8fce01d20ba96514815Raw(requestParameters: E7ea3c55affeb8fce01d20ba96514815Request, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        const requestOptions = await this.e7ea3c55affeb8fce01d20ba96514815RequestOpts(requestParameters);
+    async updateStudentRaw(requestParameters: AdministracinAlumnosApiUpdateStudentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.updateStudentRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
         return new runtime.VoidApiResponse(response);
@@ -281,8 +281,8 @@ export class AdministracinAlumnosApi extends runtime.BaseAPI {
      * Actualiza los datos del alumno (Solo Admin).
      * Modificar alumno
      */
-    async e7ea3c55affeb8fce01d20ba96514815(requestParameters: E7ea3c55affeb8fce01d20ba96514815Request, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.e7ea3c55affeb8fce01d20ba96514815Raw(requestParameters, initOverrides);
+    async updateStudent(requestParameters: AdministracinAlumnosApiUpdateStudentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.updateStudentRaw(requestParameters, initOverrides);
     }
 
 }

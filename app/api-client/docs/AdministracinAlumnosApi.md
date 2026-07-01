@@ -4,17 +4,81 @@ All URIs are relative to *http://localhost:8000*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**_043be570e56f8ff7a31e3ae3694c93c9**](AdministracinAlumnosApi.md#_043be570e56f8ff7a31e3ae3694c93c9) | **GET** /api/admin/students | Listar todos los alumnos |
-| [**_4f55fdb476bc5d5f099e21fd78b8c84f**](AdministracinAlumnosApi.md#_4f55fdb476bc5d5f099e21fd78b8c84f) | **PATCH** /api/admin/students/{student}/status | Cambiar estado activo |
-| [**_73dbbc5d6a42e6594ebcee2fa13ef6e4**](AdministracinAlumnosApi.md#_73dbbc5d6a42e6594ebcee2fa13ef6e4) | **GET** /api/admin/students/{student} | Ver ficha de un alumno |
-| [**_961d499e9711c8b48daa3e2612ab2014**](AdministracinAlumnosApi.md#_961d499e9711c8b48daa3e2612ab2014) | **POST** /api/admin/students | Inscribir un nuevo alumno |
-| [**e7ea3c55affeb8fce01d20ba96514815**](AdministracinAlumnosApi.md#e7ea3c55affeb8fce01d20ba96514815) | **PUT** /api/admin/students/{student} | Modificar alumno |
+| [**enrollStudent**](AdministracinAlumnosApi.md#enrollstudent) | **POST** /api/admin/students | Inscribir un nuevo alumno |
+| [**getStudents**](AdministracinAlumnosApi.md#getstudents) | **GET** /api/admin/students | Listar todos los alumnos |
+| [**showStudent**](AdministracinAlumnosApi.md#showstudent) | **GET** /api/admin/students/{student} | Ver ficha de un alumno |
+| [**toggleStudentStatus**](AdministracinAlumnosApi.md#togglestudentstatus) | **PATCH** /api/admin/students/{student}/status | Cambiar estado activo |
+| [**updateStudent**](AdministracinAlumnosApi.md#updatestudent) | **PUT** /api/admin/students/{student} | Modificar alumno |
 
 
 
-## _043be570e56f8ff7a31e3ae3694c93c9
+## enrollStudent
 
-> _043be570e56f8ff7a31e3ae3694c93c9()
+> enrollStudent()
+
+Inscribir un nuevo alumno
+
+Registra un alumno con rango manual (Solo Admin).
+
+### Example
+
+```ts
+import {
+  Configuration,
+  AdministracinAlumnosApi,
+} from '';
+import type { EnrollStudentRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: bearerAuth
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new AdministracinAlumnosApi(config);
+
+  try {
+    const data = await api.enrollStudent();
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+This endpoint does not need any parameter.
+
+### Return type
+
+`void` (Empty response body)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **201** | Alumno registrado exitosamente |  -  |
+| **422** | Error de validación |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## getStudents
+
+> getStudents()
 
 Listar todos los alumnos
 
@@ -27,7 +91,7 @@ import {
   Configuration,
   AdministracinAlumnosApi,
 } from '';
-import type { 043be570e56f8ff7a31e3ae3694c93c9Request } from '';
+import type { GetStudentsRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
@@ -38,7 +102,7 @@ async function example() {
   const api = new AdministracinAlumnosApi(config);
 
   try {
-    const data = await api._043be570e56f8ff7a31e3ae3694c93c9();
+    const data = await api.getStudents();
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -76,80 +140,9 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## _4f55fdb476bc5d5f099e21fd78b8c84f
+## showStudent
 
-> _4f55fdb476bc5d5f099e21fd78b8c84f(student)
-
-Cambiar estado activo
-
-Permite suspender o dar de alta a un alumno (Solo Admin).
-
-### Example
-
-```ts
-import {
-  Configuration,
-  AdministracinAlumnosApi,
-} from '';
-import type { 4f55fdb476bc5d5f099e21fd78b8c84fRequest } from '';
-
-async function example() {
-  console.log("🚀 Testing  SDK...");
-  const config = new Configuration({ 
-    // Configure HTTP bearer authorization: bearerAuth
-    accessToken: "YOUR BEARER TOKEN",
-  });
-  const api = new AdministracinAlumnosApi(config);
-
-  const body = {
-    // number | ID del alumno
-    student: 56,
-  } satisfies 4f55fdb476bc5d5f099e21fd78b8c84fRequest;
-
-  try {
-    const data = await api._4f55fdb476bc5d5f099e21fd78b8c84f(body);
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Run the test
-example().catch(console.error);
-```
-
-### Parameters
-
-
-| Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **student** | `number` | ID del alumno | [Defaults to `undefined`] |
-
-### Return type
-
-`void` (Empty response body)
-
-### Authorization
-
-[bearerAuth](../README.md#bearerAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: Not defined
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | Estado modificado exitosamente |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
-
-
-## _73dbbc5d6a42e6594ebcee2fa13ef6e4
-
-> _73dbbc5d6a42e6594ebcee2fa13ef6e4(student)
+> showStudent(student)
 
 Ver ficha de un alumno
 
@@ -162,7 +155,7 @@ import {
   Configuration,
   AdministracinAlumnosApi,
 } from '';
-import type { 73dbbc5d6a42e6594ebcee2fa13ef6e4Request } from '';
+import type { ShowStudentRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
@@ -175,10 +168,10 @@ async function example() {
   const body = {
     // number | ID del alumno
     student: 56,
-  } satisfies 73dbbc5d6a42e6594ebcee2fa13ef6e4Request;
+  } satisfies ShowStudentRequest;
 
   try {
-    const data = await api._73dbbc5d6a42e6594ebcee2fa13ef6e4(body);
+    const data = await api.showStudent(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -219,13 +212,13 @@ example().catch(console.error);
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## _961d499e9711c8b48daa3e2612ab2014
+## toggleStudentStatus
 
-> _961d499e9711c8b48daa3e2612ab2014()
+> toggleStudentStatus(student)
 
-Inscribir un nuevo alumno
+Cambiar estado activo
 
-Registra un alumno con rango manual (Solo Admin).
+Permite suspender o dar de alta a un alumno (Solo Admin).
 
 ### Example
 
@@ -234,7 +227,7 @@ import {
   Configuration,
   AdministracinAlumnosApi,
 } from '';
-import type { 961d499e9711c8b48daa3e2612ab2014Request } from '';
+import type { ToggleStudentStatusRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
@@ -244,8 +237,13 @@ async function example() {
   });
   const api = new AdministracinAlumnosApi(config);
 
+  const body = {
+    // number | ID del alumno
+    student: 56,
+  } satisfies ToggleStudentStatusRequest;
+
   try {
-    const data = await api._961d499e9711c8b48daa3e2612ab2014();
+    const data = await api.toggleStudentStatus(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -258,7 +256,10 @@ example().catch(console.error);
 
 ### Parameters
 
-This endpoint does not need any parameter.
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **student** | `number` | ID del alumno | [Defaults to `undefined`] |
 
 ### Return type
 
@@ -277,15 +278,14 @@ This endpoint does not need any parameter.
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **201** | Alumno registrado exitosamente |  -  |
-| **422** | Error de validación |  -  |
+| **200** | Estado modificado exitosamente |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## e7ea3c55affeb8fce01d20ba96514815
+## updateStudent
 
-> e7ea3c55affeb8fce01d20ba96514815(student)
+> updateStudent(student)
 
 Modificar alumno
 
@@ -298,7 +298,7 @@ import {
   Configuration,
   AdministracinAlumnosApi,
 } from '';
-import type { E7ea3c55affeb8fce01d20ba96514815Request } from '';
+import type { UpdateStudentRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
@@ -311,10 +311,10 @@ async function example() {
   const body = {
     // number | ID del alumno
     student: 56,
-  } satisfies E7ea3c55affeb8fce01d20ba96514815Request;
+  } satisfies UpdateStudentRequest;
 
   try {
-    const data = await api.e7ea3c55affeb8fce01d20ba96514815(body);
+    const data = await api.updateStudent(body);
     console.log(data);
   } catch (error) {
     console.error(error);

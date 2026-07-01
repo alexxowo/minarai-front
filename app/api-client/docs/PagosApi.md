@@ -4,158 +4,17 @@ All URIs are relative to *http://localhost:8000*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**_0b4da16a79c767828a756a8749652ba2**](PagosApi.md#_0b4da16a79c767828a756a8749652ba2) | **GET** /api/my-students | Listar alumnos relacionados |
-| [**_487c61ce04a9619a56693f5b75e0e9ce**](PagosApi.md#_487c61ce04a9619a56693f5b75e0e9ce) | **PUT** /api/admin/payments/{payment}/verify | Verificar pago (Administrador) |
-| [**_5e2794ba3d3c64e70873367505e4a751**](PagosApi.md#_5e2794ba3d3c64e70873367505e4a751) | **POST** /api/payments | Registrar un pago |
-| [**_826dc6b24dd704607aa018a59207dd96**](PagosApi.md#_826dc6b24dd704607aa018a59207dd96) | **GET** /api/payments | Listar pagos |
-| [**c0d11adea38ecde3d94e4e281c72f01e**](PagosApi.md#c0d11adea38ecde3d94e4e281c72f01e) | **GET** /api/payments/{payment} | Ver detalle de un pago |
+| [**createPayment**](PagosApi.md#createpayment) | **POST** /api/payments | Registrar un pago |
+| [**getMyStudents**](PagosApi.md#getmystudents) | **GET** /api/my-students | Listar alumnos relacionados |
+| [**getPayments**](PagosApi.md#getpayments) | **GET** /api/payments | Listar pagos |
+| [**showPayment**](PagosApi.md#showpayment) | **GET** /api/payments/{payment} | Ver detalle de un pago |
+| [**verifyPayment**](PagosApi.md#verifypaymentoperation) | **PUT** /api/admin/payments/{payment}/verify | Verificar pago (Administrador) |
 
 
 
-## _0b4da16a79c767828a756a8749652ba2
+## createPayment
 
-> Model0b4da16a79c767828a756a8749652ba2200Response _0b4da16a79c767828a756a8749652ba2()
-
-Listar alumnos relacionados
-
-Obtiene la lista de los alumnos que el usuario logueado puede gestionar (él mismo si es alumno activo, o sus representados).
-
-### Example
-
-```ts
-import {
-  Configuration,
-  PagosApi,
-} from '';
-import type { 0b4da16a79c767828a756a8749652ba2Request } from '';
-
-async function example() {
-  console.log("🚀 Testing  SDK...");
-  const config = new Configuration({ 
-    // Configure HTTP bearer authorization: bearerAuth
-    accessToken: "YOUR BEARER TOKEN",
-  });
-  const api = new PagosApi(config);
-
-  try {
-    const data = await api._0b4da16a79c767828a756a8749652ba2();
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Run the test
-example().catch(console.error);
-```
-
-### Parameters
-
-This endpoint does not need any parameter.
-
-### Return type
-
-[**Model0b4da16a79c767828a756a8749652ba2200Response**](Model0b4da16a79c767828a756a8749652ba2200Response.md)
-
-### Authorization
-
-[bearerAuth](../README.md#bearerAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: `application/json`
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | Lista de alumnos |  -  |
-| **401** | No autorizado |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
-
-
-## _487c61ce04a9619a56693f5b75e0e9ce
-
-> Model487c61ce04a9619a56693f5b75e0e9ce200Response _487c61ce04a9619a56693f5b75e0e9ce(payment, verifyPaymentRequest)
-
-Verificar pago (Administrador)
-
-Permite a un administrador aprobar o rechazar un pago. Si se aprueba, se genera automáticamente el recibo.
-
-### Example
-
-```ts
-import {
-  Configuration,
-  PagosApi,
-} from '';
-import type { 487c61ce04a9619a56693f5b75e0e9ceRequest } from '';
-
-async function example() {
-  console.log("🚀 Testing  SDK...");
-  const config = new Configuration({ 
-    // Configure HTTP bearer authorization: bearerAuth
-    accessToken: "YOUR BEARER TOKEN",
-  });
-  const api = new PagosApi(config);
-
-  const body = {
-    // number | ID del pago
-    payment: 56,
-    // VerifyPaymentRequest
-    verifyPaymentRequest: ...,
-  } satisfies 487c61ce04a9619a56693f5b75e0e9ceRequest;
-
-  try {
-    const data = await api._487c61ce04a9619a56693f5b75e0e9ce(body);
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Run the test
-example().catch(console.error);
-```
-
-### Parameters
-
-
-| Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **payment** | `number` | ID del pago | [Defaults to `undefined`] |
-| **verifyPaymentRequest** | [VerifyPaymentRequest](VerifyPaymentRequest.md) |  | |
-
-### Return type
-
-[**Model487c61ce04a9619a56693f5b75e0e9ce200Response**](Model487c61ce04a9619a56693f5b75e0e9ce200Response.md)
-
-### Authorization
-
-[bearerAuth](../README.md#bearerAuth)
-
-### HTTP request headers
-
-- **Content-Type**: `application/json`
-- **Accept**: `application/json`
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | Pago verificado exitosamente |  -  |
-| **401** | No autorizado |  -  |
-| **403** | Prohibido / Sin permisos de administrador |  -  |
-| **422** | Error de validación o pago ya procesado |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
-
-
-## _5e2794ba3d3c64e70873367505e4a751
-
-> Model5e2794ba3d3c64e70873367505e4a751201Response _5e2794ba3d3c64e70873367505e4a751(studentId, amount, paymentDate, paymentMethod, referenceNumber, receipt)
+> CreatePayment201Response createPayment(studentId, amount, paymentDate, paymentMethod, referenceNumber, receipt)
 
 Registrar un pago
 
@@ -168,7 +27,7 @@ import {
   Configuration,
   PagosApi,
 } from '';
-import type { 5e2794ba3d3c64e70873367505e4a751Request } from '';
+import type { CreatePaymentRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
@@ -191,10 +50,10 @@ async function example() {
     referenceNumber: referenceNumber_example,
     // Blob | Archivo de comprobante (jpg, jpeg, png, pdf) (optional)
     receipt: BINARY_DATA_HERE,
-  } satisfies 5e2794ba3d3c64e70873367505e4a751Request;
+  } satisfies CreatePaymentRequest;
 
   try {
-    const data = await api._5e2794ba3d3c64e70873367505e4a751(body);
+    const data = await api.createPayment(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -219,7 +78,7 @@ example().catch(console.error);
 
 ### Return type
 
-[**Model5e2794ba3d3c64e70873367505e4a751201Response**](Model5e2794ba3d3c64e70873367505e4a751201Response.md)
+[**CreatePayment201Response**](CreatePayment201Response.md)
 
 ### Authorization
 
@@ -241,9 +100,73 @@ example().catch(console.error);
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## _826dc6b24dd704607aa018a59207dd96
+## getMyStudents
 
-> Model826dc6b24dd704607aa018a59207dd96200Response _826dc6b24dd704607aa018a59207dd96(status)
+> GetMyStudents200Response getMyStudents()
+
+Listar alumnos relacionados
+
+Obtiene la lista de los alumnos que el usuario logueado puede gestionar (él mismo si es alumno activo, o sus representados).
+
+### Example
+
+```ts
+import {
+  Configuration,
+  PagosApi,
+} from '';
+import type { GetMyStudentsRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: bearerAuth
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new PagosApi(config);
+
+  try {
+    const data = await api.getMyStudents();
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+This endpoint does not need any parameter.
+
+### Return type
+
+[**GetMyStudents200Response**](GetMyStudents200Response.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Lista de alumnos |  -  |
+| **401** | No autorizado |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## getPayments
+
+> GetPayments200Response getPayments(status)
 
 Listar pagos
 
@@ -256,7 +179,7 @@ import {
   Configuration,
   PagosApi,
 } from '';
-import type { 826dc6b24dd704607aa018a59207dd96Request } from '';
+import type { GetPaymentsRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
@@ -269,10 +192,10 @@ async function example() {
   const body = {
     // 'PENDING' | 'APPROVED' | 'REJECTED' | Filtrar por estado del pago (solo disponible para administradores) (optional)
     status: status_example,
-  } satisfies 826dc6b24dd704607aa018a59207dd96Request;
+  } satisfies GetPaymentsRequest;
 
   try {
-    const data = await api._826dc6b24dd704607aa018a59207dd96(body);
+    const data = await api.getPayments(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -292,7 +215,7 @@ example().catch(console.error);
 
 ### Return type
 
-[**Model826dc6b24dd704607aa018a59207dd96200Response**](Model826dc6b24dd704607aa018a59207dd96200Response.md)
+[**GetPayments200Response**](GetPayments200Response.md)
 
 ### Authorization
 
@@ -313,9 +236,9 @@ example().catch(console.error);
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## c0d11adea38ecde3d94e4e281c72f01e
+## showPayment
 
-> C0d11adea38ecde3d94e4e281c72f01e200Response c0d11adea38ecde3d94e4e281c72f01e(payment)
+> ShowPayment200Response showPayment(payment)
 
 Ver detalle de un pago
 
@@ -328,7 +251,7 @@ import {
   Configuration,
   PagosApi,
 } from '';
-import type { C0d11adea38ecde3d94e4e281c72f01eRequest } from '';
+import type { ShowPaymentRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
@@ -341,10 +264,10 @@ async function example() {
   const body = {
     // number | ID del pago
     payment: 56,
-  } satisfies C0d11adea38ecde3d94e4e281c72f01eRequest;
+  } satisfies ShowPaymentRequest;
 
   try {
-    const data = await api.c0d11adea38ecde3d94e4e281c72f01e(body);
+    const data = await api.showPayment(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -364,7 +287,7 @@ example().catch(console.error);
 
 ### Return type
 
-[**C0d11adea38ecde3d94e4e281c72f01e200Response**](C0d11adea38ecde3d94e4e281c72f01e200Response.md)
+[**ShowPayment200Response**](ShowPayment200Response.md)
 
 ### Authorization
 
@@ -383,6 +306,83 @@ example().catch(console.error);
 | **401** | No autorizado |  -  |
 | **403** | Prohibido / Sin permisos |  -  |
 | **404** | Pago no encontrado |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## verifyPayment
+
+> VerifyPayment200Response verifyPayment(payment, verifyPaymentRequest)
+
+Verificar pago (Administrador)
+
+Permite a un administrador aprobar o rechazar un pago. Si se aprueba, se genera automáticamente el recibo.
+
+### Example
+
+```ts
+import {
+  Configuration,
+  PagosApi,
+} from '';
+import type { VerifyPaymentOperationRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: bearerAuth
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new PagosApi(config);
+
+  const body = {
+    // number | ID del pago
+    payment: 56,
+    // VerifyPaymentRequest
+    verifyPaymentRequest: ...,
+  } satisfies VerifyPaymentOperationRequest;
+
+  try {
+    const data = await api.verifyPayment(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **payment** | `number` | ID del pago | [Defaults to `undefined`] |
+| **verifyPaymentRequest** | [VerifyPaymentRequest](VerifyPaymentRequest.md) |  | |
+
+### Return type
+
+[**VerifyPayment200Response**](VerifyPayment200Response.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: `application/json`
+- **Accept**: `application/json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Pago verificado exitosamente |  -  |
+| **401** | No autorizado |  -  |
+| **403** | Prohibido / Sin permisos de administrador |  -  |
+| **422** | Error de validación o pago ya procesado |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 

@@ -14,36 +14,36 @@
 
 import * as runtime from '../runtime';
 import {
+    type Login200Response,
+    Login200ResponseFromJSON,
+    Login200ResponseToJSON,
+} from '../models/Login200Response';
+import {
     type LoginRequest,
     LoginRequestFromJSON,
     LoginRequestToJSON,
 } from '../models/LoginRequest';
 import {
-    type Model03afb12b342c2ea43bdc1de4f39e91a8200Response,
-    Model03afb12b342c2ea43bdc1de4f39e91a8200ResponseFromJSON,
-    Model03afb12b342c2ea43bdc1de4f39e91a8200ResponseToJSON,
-} from '../models/Model03afb12b342c2ea43bdc1de4f39e91a8200Response';
+    type Logout200Response,
+    Logout200ResponseFromJSON,
+    Logout200ResponseToJSON,
+} from '../models/Logout200Response';
 import {
-    type Model42f77e072dec84b0e1094cca1228298e200Response,
-    Model42f77e072dec84b0e1094cca1228298e200ResponseFromJSON,
-    Model42f77e072dec84b0e1094cca1228298e200ResponseToJSON,
-} from '../models/Model42f77e072dec84b0e1094cca1228298e200Response';
-import {
-    type Model573de1fed352c1205a32c4d1b9877375201Response,
-    Model573de1fed352c1205a32c4d1b9877375201ResponseFromJSON,
-    Model573de1fed352c1205a32c4d1b9877375201ResponseToJSON,
-} from '../models/Model573de1fed352c1205a32c4d1b9877375201Response';
+    type Register201Response,
+    Register201ResponseFromJSON,
+    Register201ResponseToJSON,
+} from '../models/Register201Response';
 import {
     type RegisterRequest,
     RegisterRequestFromJSON,
     RegisterRequestToJSON,
 } from '../models/RegisterRequest';
 
-export interface 42f77e072dec84b0e1094cca1228298eRequest {
+export interface AutenticacinApiLoginOperationRequest {
     loginRequest: LoginRequest;
 }
 
-export interface 573de1fed352c1205a32c4d1b9877375Request {
+export interface AutenticacinApiRegisterOperationRequest {
     registerRequest: RegisterRequest;
 }
 
@@ -53,60 +53,13 @@ export interface 573de1fed352c1205a32c4d1b9877375Request {
 export class AutenticacinApi extends runtime.BaseAPI {
 
     /**
-     * Creates request options for _03afb12b342c2ea43bdc1de4f39e91a8 without sending the request
+     * Creates request options for login without sending the request
      */
-    async _03afb12b342c2ea43bdc1de4f39e91a8RequestOpts(): Promise<runtime.RequestOpts> {
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        let urlPath = `/logout`;
-
-        return {
-            path: urlPath,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-        };
-    }
-
-    /**
-     * Invalida el token JWT del usuario autenticado.
-     * Cerrar sesión
-     */
-    async _03afb12b342c2ea43bdc1de4f39e91a8Raw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Model03afb12b342c2ea43bdc1de4f39e91a8200Response>> {
-        const requestOptions = await this._03afb12b342c2ea43bdc1de4f39e91a8RequestOpts();
-        const response = await this.request(requestOptions, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => Model03afb12b342c2ea43bdc1de4f39e91a8200ResponseFromJSON(jsonValue));
-    }
-
-    /**
-     * Invalida el token JWT del usuario autenticado.
-     * Cerrar sesión
-     */
-    async _03afb12b342c2ea43bdc1de4f39e91a8(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Model03afb12b342c2ea43bdc1de4f39e91a8200Response> {
-        const response = await this._03afb12b342c2ea43bdc1de4f39e91a8Raw(initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Creates request options for _42f77e072dec84b0e1094cca1228298e without sending the request
-     */
-    async _42f77e072dec84b0e1094cca1228298eRequestOpts(requestParameters: 42f77e072dec84b0e1094cca1228298eRequest): Promise<runtime.RequestOpts> {
+    async loginRequestOpts(requestParameters: AutenticacinApiLoginOperationRequest): Promise<runtime.RequestOpts> {
         if (requestParameters['loginRequest'] == null) {
             throw new runtime.RequiredError(
                 'loginRequest',
-                'Required parameter "loginRequest" was null or undefined when calling _42f77e072dec84b0e1094cca1228298e().'
+                'Required parameter "loginRequest" was null or undefined when calling login().'
             );
         }
 
@@ -117,7 +70,7 @@ export class AutenticacinApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
 
-        let urlPath = `/login`;
+        let urlPath = `/api/login`;
 
         return {
             path: urlPath,
@@ -132,30 +85,77 @@ export class AutenticacinApi extends runtime.BaseAPI {
      * Autentica al usuario en el sistema usando credenciales de email y contraseña, retornando un token JWT.
      * Iniciar sesión
      */
-    async _42f77e072dec84b0e1094cca1228298eRaw(requestParameters: 42f77e072dec84b0e1094cca1228298eRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Model42f77e072dec84b0e1094cca1228298e200Response>> {
-        const requestOptions = await this._42f77e072dec84b0e1094cca1228298eRequestOpts(requestParameters);
+    async loginRaw(requestParameters: AutenticacinApiLoginOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Login200Response>> {
+        const requestOptions = await this.loginRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => Model42f77e072dec84b0e1094cca1228298e200ResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => Login200ResponseFromJSON(jsonValue));
     }
 
     /**
      * Autentica al usuario en el sistema usando credenciales de email y contraseña, retornando un token JWT.
      * Iniciar sesión
      */
-    async _42f77e072dec84b0e1094cca1228298e(requestParameters: 42f77e072dec84b0e1094cca1228298eRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Model42f77e072dec84b0e1094cca1228298e200Response> {
-        const response = await this._42f77e072dec84b0e1094cca1228298eRaw(requestParameters, initOverrides);
+    async login(requestParameters: AutenticacinApiLoginOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Login200Response> {
+        const response = await this.loginRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Creates request options for _573de1fed352c1205a32c4d1b9877375 without sending the request
+     * Creates request options for logout without sending the request
      */
-    async _573de1fed352c1205a32c4d1b9877375RequestOpts(requestParameters: 573de1fed352c1205a32c4d1b9877375Request): Promise<runtime.RequestOpts> {
+    async logoutRequestOpts(): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/logout`;
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Invalida el token JWT del usuario autenticado.
+     * Cerrar sesión
+     */
+    async logoutRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Logout200Response>> {
+        const requestOptions = await this.logoutRequestOpts();
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => Logout200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Invalida el token JWT del usuario autenticado.
+     * Cerrar sesión
+     */
+    async logout(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Logout200Response> {
+        const response = await this.logoutRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for register without sending the request
+     */
+    async registerRequestOpts(requestParameters: AutenticacinApiRegisterOperationRequest): Promise<runtime.RequestOpts> {
         if (requestParameters['registerRequest'] == null) {
             throw new runtime.RequiredError(
                 'registerRequest',
-                'Required parameter "registerRequest" was null or undefined when calling _573de1fed352c1205a32c4d1b9877375().'
+                'Required parameter "registerRequest" was null or undefined when calling register().'
             );
         }
 
@@ -181,19 +181,19 @@ export class AutenticacinApi extends runtime.BaseAPI {
      * Permite registrar un nuevo usuario con el rol por defecto USER.
      * Registrar un nuevo usuario
      */
-    async _573de1fed352c1205a32c4d1b9877375Raw(requestParameters: 573de1fed352c1205a32c4d1b9877375Request, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Model573de1fed352c1205a32c4d1b9877375201Response>> {
-        const requestOptions = await this._573de1fed352c1205a32c4d1b9877375RequestOpts(requestParameters);
+    async registerRaw(requestParameters: AutenticacinApiRegisterOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Register201Response>> {
+        const requestOptions = await this.registerRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => Model573de1fed352c1205a32c4d1b9877375201ResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => Register201ResponseFromJSON(jsonValue));
     }
 
     /**
      * Permite registrar un nuevo usuario con el rol por defecto USER.
      * Registrar un nuevo usuario
      */
-    async _573de1fed352c1205a32c4d1b9877375(requestParameters: 573de1fed352c1205a32c4d1b9877375Request, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Model573de1fed352c1205a32c4d1b9877375201Response> {
-        const response = await this._573de1fed352c1205a32c4d1b9877375Raw(requestParameters, initOverrides);
+    async register(requestParameters: AutenticacinApiRegisterOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Register201Response> {
+        const response = await this.registerRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

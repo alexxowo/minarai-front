@@ -4,15 +4,15 @@ All URIs are relative to *http://localhost:8000*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**_0d507af438d337a3bf3a92bf89515f5f**](MisAlumnosApi.md#_0d507af438d337a3bf3a92bf89515f5f) | **POST** /api/my-students | Auto-inscribirse o inscribir un representado |
-| [**_512fc0834b47f246a9c70a793486bed6**](MisAlumnosApi.md#_512fc0834b47f246a9c70a793486bed6) | **GET** /api/my-students/{student} | Ver detalle de un alumno representado |
-| [**c6342066736a9dd30cdec73bf284a791**](MisAlumnosApi.md#c6342066736a9dd30cdec73bf284a791) | **GET** /api/my-students-list | Listar mis alumnos representados |
+| [**enrollMyStudent**](MisAlumnosApi.md#enrollmystudent) | **POST** /api/my-students | Auto-inscribirse o inscribir un representado |
+| [**getMyStudentsList**](MisAlumnosApi.md#getmystudentslist) | **GET** /api/my-students-list | Listar mis alumnos representados |
+| [**showMyStudent**](MisAlumnosApi.md#showmystudent) | **GET** /api/my-students/{student} | Ver detalle de un alumno representado |
 
 
 
-## _0d507af438d337a3bf3a92bf89515f5f
+## enrollMyStudent
 
-> _0d507af438d337a3bf3a92bf89515f5f()
+> enrollMyStudent()
 
 Auto-inscribirse o inscribir un representado
 
@@ -25,7 +25,7 @@ import {
   Configuration,
   MisAlumnosApi,
 } from '';
-import type { 0d507af438d337a3bf3a92bf89515f5fRequest } from '';
+import type { EnrollMyStudentRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
@@ -36,7 +36,7 @@ async function example() {
   const api = new MisAlumnosApi(config);
 
   try {
-    const data = await api._0d507af438d337a3bf3a92bf89515f5f();
+    const data = await api.enrollMyStudent();
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -74,9 +74,72 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
-## _512fc0834b47f246a9c70a793486bed6
+## getMyStudentsList
 
-> _512fc0834b47f246a9c70a793486bed6(student)
+> getMyStudentsList()
+
+Listar mis alumnos representados
+
+Obtiene los alumnos asociados al representante autenticado o a sí mismo.
+
+### Example
+
+```ts
+import {
+  Configuration,
+  MisAlumnosApi,
+} from '';
+import type { GetMyStudentsListRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: bearerAuth
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new MisAlumnosApi(config);
+
+  try {
+    const data = await api.getMyStudentsList();
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+This endpoint does not need any parameter.
+
+### Return type
+
+`void` (Empty response body)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Lista de alumnos asociados |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## showMyStudent
+
+> showMyStudent(student)
 
 Ver detalle de un alumno representado
 
@@ -89,7 +152,7 @@ import {
   Configuration,
   MisAlumnosApi,
 } from '';
-import type { 512fc0834b47f246a9c70a793486bed6Request } from '';
+import type { ShowMyStudentRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
@@ -102,10 +165,10 @@ async function example() {
   const body = {
     // number | ID del alumno
     student: 56,
-  } satisfies 512fc0834b47f246a9c70a793486bed6Request;
+  } satisfies ShowMyStudentRequest;
 
   try {
-    const data = await api._512fc0834b47f246a9c70a793486bed6(body);
+    const data = await api.showMyStudent(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -142,69 +205,6 @@ example().catch(console.error);
 |-------------|-------------|------------------|
 | **200** | Detalle del alumno |  -  |
 | **403** | No autorizado |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
-
-
-## c6342066736a9dd30cdec73bf284a791
-
-> c6342066736a9dd30cdec73bf284a791()
-
-Listar mis alumnos representados
-
-Obtiene los alumnos asociados al representante autenticado o a sí mismo.
-
-### Example
-
-```ts
-import {
-  Configuration,
-  MisAlumnosApi,
-} from '';
-import type { C6342066736a9dd30cdec73bf284a791Request } from '';
-
-async function example() {
-  console.log("🚀 Testing  SDK...");
-  const config = new Configuration({ 
-    // Configure HTTP bearer authorization: bearerAuth
-    accessToken: "YOUR BEARER TOKEN",
-  });
-  const api = new MisAlumnosApi(config);
-
-  try {
-    const data = await api.c6342066736a9dd30cdec73bf284a791();
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Run the test
-example().catch(console.error);
-```
-
-### Parameters
-
-This endpoint does not need any parameter.
-
-### Return type
-
-`void` (Empty response body)
-
-### Authorization
-
-[bearerAuth](../README.md#bearerAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: Not defined
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | Lista de alumnos asociados |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 

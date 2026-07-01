@@ -7,6 +7,8 @@ import "toastify-js/src/toastify.css";
 import { Input } from "@/components/atoms/Input";
 import { DateSelector } from "@/components/atoms/DateSelector";
 import { Button } from "@/components/atoms/Button";
+import { AdministracinRepresentantesApi } from "@/api-client";
+import { getApiClient } from "@/utils/api-client";
 
 export function meta({}: any) {
   return [{ title: "Crear Usuario - Minarai" }];
@@ -15,18 +17,23 @@ export function meta({}: any) {
 export default function CreateUser() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const [formData, setFormData] = useState({
-    name: "",
-    surname: "",
-    cedula: "",
+    firstName: "",
+    lastName: "",
+    dob: new Date().toISOString().split('T')[0],
     email: "",
-    address: "",
+    phone: "",
+    password: "", // Optional
     students: [] as Array<{
       id: number;
-      name: string;
-      surname: string;
-      birthDate: string;
-      joinDate: string;
+      firstName: string;
+      lastName: string;
+      dob: string;
+      phone: string;
+      email: string;
+      rankId: string;
     }>
   });
 
@@ -35,17 +42,34 @@ export default function CreateUser() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleBasicDateChange = (value: Date | null) => {
+    if (value) {
+        setFormData(prev => ({ ...prev, dob: value.toISOString().split('T')[0] }));
+    }
+  };
+
   const addStudent = () => {
+    if (formData.students.length >= 1) {
+        Toastify({
+            text: "Actualmente solo puedes registrar 1 alumno durante la creación del representante.",
+            duration: 3000,
+            gravity: "top", position: "right",
+            style: { background: "#ffc107", color: "#000" },
+        }).showToast();
+        return;
+    }
     setFormData(prev => ({
       ...prev,
       students: [
         ...prev.students,
         {
           id: Date.now(),
-          name: "",
-          surname: "",
-          birthDate: "",
-          joinDate: new Date().toISOString().split('T')[0]
+          firstName: "",
+          lastName: "",
+          dob: new Date().toISOString().split('T')[0],
+          phone: "",
+          email: "",
+          rankId: "1" // Blanco
         }
       ]
     }));
@@ -59,9 +83,11 @@ export default function CreateUser() {
   };
 
   const handleStudentChange = (id: number, field: string, value: string | Date | null) => {
-    let finalValue = value;
+    let finalValue: string | null = null;
     if (value instanceof Date) {
         finalValue = value.toISOString().split('T')[0];
+    } else {
+        finalValue = value;
     }
 
     setFormData(prev => ({
@@ -78,39 +104,77 @@ export default function CreateUser() {
     if (step > 1) setStep(step - 1);
   };
 
-  const handleSubmit = () => {
-    console.log("Form Data Submitted:", formData);
-    
-    // Simulate successful creation with Toastify
-    Toastify({
-      text: "Usuario creado satisfactoriamente",
-      duration: 3000,
-      gravity: "top", // `top` or `bottom`
-      position: "right", // `left`, `center` or `right`
-      stopOnFocus: true, // Prevents dismissing of toast on hover
-      style: {
-        background: "linear-gradient(to right, #00b09b, #96c93d)",
-      },
-      onClick: function(){} // Callback after click
-    }).showToast();
-    
-    // Navigate back after delay
-    setTimeout(() => {
-        navigate("/dashboard/users");
-    }, 2000);
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+        const client = getApiClient(AdministracinRepresentantesApi);
+        
+        const payload: any = {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            dob: new Date(formData.dob),
+            phone: formData.phone,
+            password: formData.password || undefined,
+            createStudent: formData.students.length > 0,
+        };
+
+        if (formData.students.length > 0) {
+            const student = formData.students[0];
+            payload.student = {
+                firstName: student.firstName,
+                lastName: student.lastName,
+                dob: new Date(student.dob),
+                phone: student.phone || undefined,
+                email: student.email || undefined,
+                rankId: Number(student.rankId)
+            };
+        }
+
+        await client.storeRepresentative({ storeRepresentativeRequest: payload });
+        
+        Toastify({
+          text: "Usuario creado satisfactoriamente",
+          duration: 3000,
+          gravity: "top",
+          position: "right",
+          style: { background: "linear-gradient(to right, #00b09b, #96c93d)" },
+        }).showToast();
+        
+        setTimeout(() => {
+            navigate("/dashboard/users");
+        }, 1500);
+    } catch (error: any) {
+        console.error("Error creating user:", error);
+        let errorMsg = "Error al crear el usuario. Verifica los datos.";
+        
+        try {
+            const errData = await error.response.json();
+            if (errData.message) errorMsg = errData.message;
+        } catch (e) {}
+
+        Toastify({
+          text: errorMsg,
+          duration: 4000,
+          gravity: "top",
+          position: "right",
+          style: { background: "linear-gradient(to right, #ff5f6d, #ffc371)" },
+        }).showToast();
+        setIsSubmitting(false);
+    }
   };
 
   const steps = [
     { number: 1, title: "Información Básica", icon: FaUser },
-    { number: 2, title: "Asignar Alumnos", icon: FaChild },
+    { number: 2, title: "Asignar Alumno", icon: FaChild },
     { number: 3, title: "Verificación", icon: FaCheck },
   ];
 
   return (
-    <div className="max-w-4xl mx-auto font-raleway animate-fade-in relative">
+    <div className="max-w-4xl mx-auto font-raleway animate-fade-in relative pb-10">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900 font-bebas tracking-wide mb-2">Crear Nuevo Usuario</h1>
-        <p className="text-gray-500 text-sm">Complete la información para registrar un nuevo usuario y sus alumnos.</p>
+        <p className="text-gray-500 text-sm">Complete la información para registrar un nuevo usuario y su alumno.</p>
       </div>
 
       {/* Stepper */}
@@ -150,29 +214,22 @@ export default function CreateUser() {
             <div className="animate-fade-in">
                 <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                     <span className="w-1 h-6 bg-golden-rod-500 rounded-full"></span>
-                    Información Personal
+                    Información Personal del Representante
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Input 
                         label="Nombre"
-                        name="name" 
-                        value={formData.name} 
+                        name="firstName" 
+                        value={formData.firstName} 
                         onChange={handleBasicInfoChange}
                         placeholder="Ej. Juan"
                     />
                     <Input 
                         label="Apellido"
-                        name="surname" 
-                        value={formData.surname} 
+                        name="lastName" 
+                        value={formData.lastName} 
                         onChange={handleBasicInfoChange}
                         placeholder="Ej. Pérez"
-                    />
-                    <Input 
-                        label="Cédula / ID"
-                        name="cedula" 
-                        value={formData.cedula} 
-                        onChange={handleBasicInfoChange}
-                        placeholder="Ej. 12345678"
                     />
                     <Input 
                         label="Correo Electrónico"
@@ -183,12 +240,26 @@ export default function CreateUser() {
                         placeholder="Ej. juan@example.com"
                     />
                     <Input 
-                        label="Dirección"
-                        name="address" 
-                        value={formData.address} 
+                        label="Teléfono"
+                        name="phone" 
+                        value={formData.phone} 
                         onChange={handleBasicInfoChange}
-                        wrapperClassName="md:col-span-2"
-                        placeholder="Ej. Av. Principal 123"
+                        placeholder="Ej. +584141234567"
+                    />
+                    <div className="md:col-span-1">
+                         <label className="block text-sm font-medium text-gray-700 mb-1">Fecha de Nacimiento</label>
+                         <DateSelector 
+                            date={formData.dob ? new Date(formData.dob) : null}
+                            onChange={handleBasicDateChange}
+                         />
+                    </div>
+                    <Input 
+                        label="Contraseña (Opcional)"
+                        type="password" 
+                        name="password" 
+                        value={formData.password} 
+                        onChange={handleBasicInfoChange}
+                        placeholder="Dejar en blanco para autogenerar"
                     />
                 </div>
             </div>
@@ -198,69 +269,74 @@ export default function CreateUser() {
              <div className="animate-fade-in">
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                         <span className="w-1 h-6 bg-golden-rod-500 rounded-full"></span>
-                        Alumnos Asociados
+                        <span className="w-1 h-6 bg-golden-rod-500 rounded-full"></span>
+                        Alumno Asociado
                     </h2>
-                    <Button 
-                        variant="secondary" 
-                        onClick={addStudent}
-                        icon={<FaPlus />}
-                        type="button"
-                    >
+                    <Button variant="secondary" icon={<FaPlus />} onClick={addStudent} disabled={formData.students.length >= 1}>
                         Agregar Alumno
                     </Button>
                 </div>
 
                 <div className="space-y-6">
                     {formData.students.length === 0 ? (
-                        <div className="text-center py-12 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50">
-                            <FaChild className="mx-auto text-4xl text-gray-300 mb-3" />
-                            <p className="text-gray-500 font-medium">No hay alumnos asignados aún.</p>
-                            <p className="text-xs text-gray-400">Haga clic en "Agregar Alumno" para comenzar.</p>
+                        <div className="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+                            <FaChild className="text-4xl text-gray-300 mx-auto mb-3" />
+                            <p className="text-gray-500 mb-4">Puedes asociar un alumno inicialmente.</p>
+                            <Button variant="secondary" onClick={addStudent}>
+                                Agregar Alumno
+                            </Button>
                         </div>
                     ) : (
                         formData.students.map((student, index) => (
-                            <div key={student.id} className="bg-gray-50 p-6 rounded-xl border border-gray-100 relative group animate-fade-in-up">
+                            <div key={student.id} className="bg-gray-50 p-6 rounded-xl border border-gray-100 relative group animate-fade-in">
                                 <button 
                                     onClick={() => removeStudent(student.id)}
-                                    className="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors p-2"
-                                    title="Eliminar Alumno"
+                                    className="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors"
                                 >
                                     <FaTrash />
                                 </button>
-                                <span className="absolute -top-3 left-4 bg-white px-3 py-1 text-xs font-bold text-gray-500 border border-gray-200 rounded-full shadow-sm">
-                                    Alumno #{index + 1}
-                                </span>
-                                
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                                <h3 className="font-bold text-gray-700 mb-4 font-bebas tracking-wide">
+                                    Alumno {index + 1}
+                                </h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <Input 
                                         label="Nombre"
-                                        value={student.name}
-                                        onChange={(e) => handleStudentChange(student.id, 'name', e.target.value)}
+                                        value={student.firstName}
+                                        onChange={(e) => handleStudentChange(student.id, 'firstName', e.target.value)}
                                         placeholder="Nombre del alumno"
                                     />
                                     <Input 
                                         label="Apellido"
-                                        value={student.surname}
-                                        onChange={(e) => handleStudentChange(student.id, 'surname', e.target.value)}
+                                        value={student.lastName}
+                                        onChange={(e) => handleStudentChange(student.id, 'lastName', e.target.value)}
                                         placeholder="Apellido del alumno"
                                     />
-                                    <DateSelector 
-                                        label="Fecha de Nacimiento"
-                                        selected={student.birthDate ? new Date(student.birthDate + 'T12:00:00') : null}
-                                        onChange={(date) => handleStudentChange(student.id, 'birthDate', date)}
-                                    />
-                                    <DateSelector 
-                                        label="Fecha de Ingreso"
-                                        selected={student.joinDate ? new Date(student.joinDate + 'T12:00:00') : null}
-                                        onChange={(date) => handleStudentChange(student.id, 'joinDate', date)}
-                                    />
+                                    <div>
+                                         <label className="block text-sm font-medium text-gray-700 mb-1">Fecha de Nacimiento</label>
+                                         <DateSelector 
+                                            date={student.dob ? new Date(student.dob) : null}
+                                            onChange={(date) => handleStudentChange(student.id, 'dob', date)}
+                                         />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Rango / Cinturón Inicial</label>
+                                        <select 
+                                            value={student.rankId}
+                                            onChange={(e) => handleStudentChange(student.id, 'rankId', e.target.value)}
+                                            className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-rod-400 transition-all text-gray-900"
+                                        >
+                                            <option value="1">Cinturón Blanco (10mo Kyu)</option>
+                                            <option value="2">Cinturón Celeste (9no Kyu)</option>
+                                            <option value="3">Cinturón Amarillo (8vo Kyu)</option>
+                                            <option value="4">Cinturón Naranja (7mo Kyu)</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         ))
                     )}
                 </div>
-             </div>
+            </div>
         )}
 
         {step === 3 && (
@@ -276,19 +352,19 @@ export default function CreateUser() {
                         <dl className="space-y-3 text-sm">
                             <div className="flex justify-between">
                                 <dt className="text-gray-500">Nombre Completo:</dt>
-                                <dd className="font-bold text-gray-900">{formData.name} {formData.surname}</dd>
-                            </div>
-                            <div className="flex justify-between">
-                                <dt className="text-gray-500">Cédula:</dt>
-                                <dd className="font-bold text-gray-900">{formData.cedula}</dd>
+                                <dd className="font-bold text-gray-900">{formData.firstName} {formData.lastName}</dd>
                             </div>
                             <div className="flex justify-between">
                                 <dt className="text-gray-500">Email:</dt>
                                 <dd className="font-bold text-gray-900">{formData.email}</dd>
                             </div>
                             <div className="flex justify-between">
-                                <dt className="text-gray-500">Dirección:</dt>
-                                <dd className="font-bold text-gray-900">{formData.address}</dd>
+                                <dt className="text-gray-500">Teléfono:</dt>
+                                <dd className="font-bold text-gray-900">{formData.phone}</dd>
+                            </div>
+                            <div className="flex justify-between">
+                                <dt className="text-gray-500">Nacimiento:</dt>
+                                <dd className="font-bold text-gray-900">{formData.dob}</dd>
                             </div>
                         </dl>
                      </div>
@@ -298,12 +374,11 @@ export default function CreateUser() {
                         {formData.students.map((student, idx) => (
                              <div key={idx} className="bg-white border border-gray-100 p-4 rounded-lg shadow-sm">
                                 <div className="flex justify-between items-start">
-                                    <div className="font-bold text-gray-900">{student.name} {student.surname}</div>
+                                    <div className="font-bold text-gray-900">{student.firstName} {student.lastName}</div>
                                     <span className="text-xs bg-golden-rod-100 text-golden-rod-700 px-2 py-0.5 rounded">Nuevo Ingreso</span>
                                 </div>
                                 <div className="mt-2 text-xs text-gray-500 flex gap-4">
-                                    <span>Nacimiento: {student.birthDate}</span>
-                                    <span>Ingreso: {student.joinDate}</span>
+                                    <span>Nacimiento: {student.dob}</span>
                                 </div>
                              </div>
                         ))}
@@ -318,10 +393,10 @@ export default function CreateUser() {
          {step > 1 ? (
              <Button 
                 variant="secondary"
-                outlined
                 onClick={handleBack}
                 icon={<FaArrowLeft />}
-                className="hover:bg-gray-50 border-gray-300 text-gray-600" // Overriding colors for neutral look
+                className="hover:bg-gray-50 border-gray-300 text-gray-600"
+                disabled={isSubmitting}
              >
                 Anterior
              </Button>
@@ -333,7 +408,7 @@ export default function CreateUser() {
             <Button 
                 variant="secondary"
                 onClick={handleNext}
-                className="flex-row-reverse"
+                className="flex-row-reverse bg-black-beauty-900 text-golden-rod-500 hover:bg-black-beauty-800"
                 icon={<FaArrowRight />}
             >
                 Siguiente
@@ -343,9 +418,10 @@ export default function CreateUser() {
                 variant="primary"
                 onClick={handleSubmit}
                 icon={<FaCheck />}
-                className="flex-row-reverse"
+                className="flex-row-reverse bg-green-500 hover:bg-green-600 border-green-500 text-white shadow-green-500/30"
+                disabled={isSubmitting}
              >
-                Verificar y Crear
+                {isSubmitting ? "Creando..." : "Verificar y Crear"}
             </Button>
          )}
       </div>
