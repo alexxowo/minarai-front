@@ -43,14 +43,18 @@ export default function UserProfile() {
             const response = await client.showRepresentativeRaw({ user: Number(userId) });
             const data = await response.raw.json();
             const userData = data.data;
-            if (userData) {
-                setUser(userData);
+            if (userData && userData.representative) {
+                const rep = userData.representative;
+                setUser({
+                    ...rep,
+                    students: userData.represented_students || []
+                });
                 setFormData({
-                    name: userData.name,
-                    surname: userData.surname || "",
-                    email: userData.email,
-                    role: userData.role,
-                    status: userData.status
+                    name: rep.first_name || "",
+                    surname: rep.last_name || "",
+                    email: rep.email || "",
+                    role: rep.role || "",
+                    status: rep.status || "active"
                 });
             }
         } catch (error) {
