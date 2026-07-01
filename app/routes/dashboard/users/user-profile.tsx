@@ -124,7 +124,7 @@ export default function UserProfile() {
                     </button>
                     <div>
                          <h1 className="text-2xl font-bold text-gray-900 font-bebas tracking-wide">Perfil de Usuario</h1>
-                         <p className="text-gray-500 text-sm">Gestiona la información, alumnos y pagos de {user.name}.</p>
+                         <p className="text-gray-500 text-sm">Gestiona la información, alumnos y pagos de {user.first_name || user.firstName} {user.last_name || user.lastName}.</p>
                     </div>
                 </div>
                 {user.status === 'active' && (
@@ -140,10 +140,10 @@ export default function UserProfile() {
                     <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
                         <div className="flex items-center gap-4 mb-6">
                             <div className="h-16 w-16 rounded-full bg-golden-rod-100 text-golden-rod-700 flex items-center justify-center font-bold text-3xl">
-                                {user.name.charAt(0)}
+                                {(user.first_name || user.firstName || "?").charAt(0)}
                             </div>
                             <div>
-                                <h2 className="text-lg font-bold text-gray-900">{user.name}</h2>
+                                <h2 className="text-lg font-bold text-gray-900">{user.first_name || user.firstName} {user.last_name || user.lastName}</h2>
                                 <p className="text-sm text-gray-500">{user.role}</p>
                             </div>
                         </div>
@@ -219,7 +219,7 @@ export default function UserProfile() {
                                     <IoMdSchool className="text-lg" />
                                     Alumnos Asociados
                                     <span className="ml-2 bg-gray-100 text-gray-900 py-0.5 px-2 rounded-full text-xs">
-                                        {user.students.length}
+                                        {(user.students || []).length}
                                     </span>
                                 </button>
                                 <button
@@ -251,10 +251,10 @@ export default function UserProfile() {
                                         {user.students && user.students.length > 0 ? user.students.map((student: any, idx: number) => (
                                             <div key={idx} className="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-100 hover:border-golden-rod-200 transition-colors group">
                                                 <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600 mr-4">
-                                                    {student.name.charAt(0)}
+                                                    {(student.first_name || student.firstName || "?").charAt(0)}
                                                 </div>
                                                 <div className="flex-1">
-                                                    <h4 className="text-base font-bold text-gray-900">{student.name} {student.surname}</h4>
+                                                    <h4 className="text-base font-bold text-gray-900">{(student.first_name || student.firstName)} {(student.last_name || student.lastName)}</h4>
                                                     <p className="text-sm text-gray-500">{student.rank || 'Sin rango asignado'}</p>
                                                 </div>
                                                 <Link to={`/dashboard/students/${student.id}`} className="text-sm font-bold text-gray-400 group-hover:text-golden-rod-600 transition-colors">

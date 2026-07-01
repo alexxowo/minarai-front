@@ -84,10 +84,10 @@ export default function Users() {
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-3">
                                         <div className="h-10 w-10 rounded-full bg-golden-rod-100 text-golden-rod-700 flex items-center justify-center font-bold text-lg">
-                                            {user.name.charAt(0)}
+                                            {(user.first_name || user.firstName || "?").charAt(0)}
                                         </div>
                                         <div>
-                                            <p className="text-sm font-bold text-gray-900">{user.name} {user.surname}</p>
+                                            <p className="text-sm font-bold text-gray-900">{(user.first_name || user.firstName)} {(user.last_name || user.lastName)}</p>
                                             <p className="text-xs text-gray-500">{user.email}</p>
                                         </div>
                                     </div>

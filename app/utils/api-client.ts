@@ -7,13 +7,20 @@ import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
 
 // Base Configuration for the generated API clients
-const apiConfig = new Configuration({
+export const apiConfig = new Configuration({
   basePath: import.meta.env.VITE_API_URL || 'http://localhost:8000',
   accessToken: async () => {
     const token = useAuthStore.getState().token;
     return token || '';
   }
 });
+
+/**
+ * Helper to instantiate any API client class with the global configuration
+ */
+export function getApiClient<T>(ApiClass: new (config: Configuration) => T): T {
+  return new ApiClass(apiConfig);
+}
 
 /**
  * Custom wrapper for API client promises to catch network/response errors,
