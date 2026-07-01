@@ -6,7 +6,8 @@
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
+    "typecheck": "react-router typegen && tsc",
+    "generate-api": "npx -y @openapitools/openapi-generator-cli generate -i ../minarai_backend/storage/api-docs/api-docs.json -g typescript-fetch -o ./app/api-client --additional-properties=typescriptThreePlus=true"
   },
   "dependencies": {
     "@react-router/node": "7.12.0",
