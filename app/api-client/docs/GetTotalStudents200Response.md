@@ -1,38 +1,26 @@
 
-# User
+# GetTotalStudents200Response
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`id` | number
-`firstName` | string
-`lastName` | string
-`email` | string
-`dob` | Date
-`phone` | string
-`role` | string
-`createdAt` | Date
-`updatedAt` | Date
+`data` | [StatCardResponse](StatCardResponse.md)
+`didError` | boolean
+`error` | string
 
 ## Example
 
 ```typescript
-import type { User } from ''
+import type { GetTotalStudents200Response } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "id": 1,
-  "firstName": Juan,
-  "lastName": Pérez,
-  "email": juan.perez@example.com,
-  "dob": Mon May 14 20:00:00 VET 1990,
-  "phone": +584120000000,
-  "role": USER,
-  "createdAt": null,
-  "updatedAt": null,
-} satisfies User
+  "data": null,
+  "didError": false,
+  "error": null,
+} satisfies GetTotalStudents200Response
 
 console.log(example)
 
@@ -41,7 +29,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as User
+const exampleParsed = JSON.parse(exampleJSON) as GetTotalStudents200Response
 console.log(exampleParsed)
 ```
 

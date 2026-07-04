@@ -49,11 +49,19 @@ export default function UserProfile() {
                     ...rep,
                     students: userData.represented_students || []
                 });
+
+                let displayRole = "Padre/Tutor";
+                if (rep.role === 'ADMIN') {
+                    displayRole = "Administrador";
+                } else if (rep.student_profile) {
+                    displayRole = "Alumno Adulto";
+                }
+
                 setFormData({
                     name: rep.first_name || "",
                     surname: rep.last_name || "",
                     email: rep.email || "",
-                    role: rep.role || "",
+                    role: displayRole,
                     status: rep.status || "active"
                 });
             }
@@ -252,20 +260,25 @@ export default function UserProfile() {
                                     </div>
                                     
                                     <div className="space-y-3">
-                                        {user.students && user.students.length > 0 ? user.students.map((student: any, idx: number) => (
-                                            <div key={idx} className="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-100 hover:border-golden-rod-200 transition-colors group">
-                                                <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600 mr-4">
-                                                    {(student.first_name || student.firstName || "?").charAt(0)}
-                                                </div>
-                                                <div className="flex-1">
-                                                    <h4 className="text-base font-bold text-gray-900">{(student.first_name || student.firstName)} {(student.last_name || student.lastName)}</h4>
-                                                    <p className="text-sm text-gray-500">{student.rank || 'Sin rango asignado'}</p>
-                                                </div>
-                                                <Link to={`/dashboard/students/${student.id}`} className="text-sm font-bold text-gray-400 group-hover:text-golden-rod-600 transition-colors">
-                                                    Ver Perfil
-                                                </Link>
-                                            </div>
-                                        )) : (
+                                        {user.students && user.students.length > 0 ? user.students.map((student: any, idx: number) => {
+                                             const studentName = student.user?.first_name || student.user?.firstName || "";
+                                             const studentSurname = student.user?.last_name || student.user?.lastName || "";
+                                             const rankName = student.rank?.name || 'Sin rango asignado';
+                                             return (
+                                                 <div key={idx} className="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-100 hover:border-golden-rod-200 transition-colors group">
+                                                     <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600 mr-4">
+                                                         {(studentName || "?").charAt(0)}
+                                                     </div>
+                                                     <div className="flex-1">
+                                                         <h4 className="text-base font-bold text-gray-900">{studentName} {studentSurname}</h4>
+                                                         <p className="text-sm text-gray-500">{rankName}</p>
+                                                     </div>
+                                                     <Link to={`/dashboard/students/${student.id}`} className="text-sm font-bold text-gray-400 group-hover:text-golden-rod-600 transition-colors">
+                                                         Ver Perfil
+                                                     </Link>
+                                                 </div>
+                                             );
+                                         }) : (
                                             <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-200">
                                                 <p className="text-gray-400 italic mb-4">No tiene alumnos asociados.</p>
                                                 <Button variant="secondary" icon={<FaPlus />} onClick={handleAddStudent}>

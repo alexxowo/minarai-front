@@ -1,38 +1,24 @@
 
-# User
+# StatCardResponseTrend
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`id` | number
-`firstName` | string
-`lastName` | string
-`email` | string
-`dob` | Date
-`phone` | string
-`role` | string
-`createdAt` | Date
-`updatedAt` | Date
+`value` | number
+`isPositive` | boolean
 
 ## Example
 
 ```typescript
-import type { User } from ''
+import type { StatCardResponseTrend } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "id": 1,
-  "firstName": Juan,
-  "lastName": Pérez,
-  "email": juan.perez@example.com,
-  "dob": Mon May 14 20:00:00 VET 1990,
-  "phone": +584120000000,
-  "role": USER,
-  "createdAt": null,
-  "updatedAt": null,
-} satisfies User
+  "value": 12,
+  "isPositive": true,
+} satisfies StatCardResponseTrend
 
 console.log(example)
 
@@ -41,7 +27,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as User
+const exampleParsed = JSON.parse(exampleJSON) as StatCardResponseTrend
 console.log(exampleParsed)
 ```
 

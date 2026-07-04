@@ -13,6 +13,11 @@
  */
 
 import * as runtime from '../runtime';
+import {
+    type ShowStudent200Response,
+    ShowStudent200ResponseFromJSON,
+    ShowStudent200ResponseToJSON,
+} from '../models/ShowStudent200Response';
 
 export interface AdministracinAlumnosApiShowStudentRequest {
     student: number;
@@ -162,19 +167,20 @@ export class AdministracinAlumnosApi extends runtime.BaseAPI {
      * Obtiene la información de un alumno específico (Solo Admin).
      * Ver ficha de un alumno
      */
-    async showStudentRaw(requestParameters: AdministracinAlumnosApiShowStudentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async showStudentRaw(requestParameters: AdministracinAlumnosApiShowStudentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShowStudent200Response>> {
         const requestOptions = await this.showStudentRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => ShowStudent200ResponseFromJSON(jsonValue));
     }
 
     /**
      * Obtiene la información de un alumno específico (Solo Admin).
      * Ver ficha de un alumno
      */
-    async showStudent(requestParameters: AdministracinAlumnosApiShowStudentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.showStudentRaw(requestParameters, initOverrides);
+    async showStudent(requestParameters: AdministracinAlumnosApiShowStudentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShowStudent200Response> {
+        const response = await this.showStudentRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**

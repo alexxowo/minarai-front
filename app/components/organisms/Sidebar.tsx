@@ -1,11 +1,30 @@
 import { NavLink, useLocation } from "react-router";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useState, useEffect } from "react";
-import { GoChevronRight, GoChevronDown, GoDotFill, GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
-import { MdDashboard, MdPayments, MdAdminPanelSettings, MdSettings } from "react-icons/md";
-import { FaFolder, FaTrophy, FaUserGraduate, FaFileInvoiceDollar, FaUsers } from "react-icons/fa";
-import { BsBank } from "react-icons/bs";
-import LogoMinaraiColor from "@/assets/images/logotipo_color.svg"
+import * as GoIcons from "react-icons/go";
+import * as MdIcons from "react-icons/md";
+import * as FaIcons from "react-icons/fa";
+import * as BsIcons from "react-icons/bs";
+import sidebarConfig from "../../config/sidebar.json";
+import LogoMinaraiColor from "@/assets/images/logotipo_color.svg";
+
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  MdDashboard: MdIcons.MdDashboard,
+  MdPayments: MdIcons.MdPayments,
+  MdAdminPanelSettings: MdIcons.MdAdminPanelSettings,
+  MdSettings: MdIcons.MdSettings,
+  FaFolder: FaIcons.FaFolder,
+  FaTrophy: FaIcons.FaTrophy,
+  FaUserGraduate: FaIcons.FaUserGraduate,
+  FaFileInvoiceDollar: FaIcons.FaFileInvoiceDollar,
+  FaUsers: FaIcons.FaUsers,
+  BsBank: BsIcons.BsBank,
+};
+
+const GoDotFill = GoIcons.GoDotFill;
+const GoSidebarCollapse = GoIcons.GoSidebarCollapse;
+const GoSidebarExpand = GoIcons.GoSidebarExpand;
+const GoChevronDown = GoIcons.GoChevronDown;
 
 export function Sidebar() {
   const { user, isSidebarCollapsed, toggleSidebar } = useAuthStore();
@@ -17,20 +36,26 @@ export function Sidebar() {
   const isExpanded = !isSidebarCollapsed || (isSidebarCollapsed && isHovered);
 
   // State for collapsible sections
-  const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({
-    students: false,
-    payments: false,
-    invoices: false,
-    treasury: false,
-    operations: false,
+  const [expanded, setExpanded] = useState<{ [key: string]: boolean }>(() => {
+    const initial: { [key: string]: boolean } = {};
+    sidebarConfig.menu.forEach((item: any) => {
+      if (item.type === 'collapsible' && item.id) {
+        initial[item.id] = false;
+      }
+    });
+    return initial;
   });
 
   // Automatically expand section if a child is active
   useEffect(() => {
-    if (location.pathname.includes('/dashboard/students')) setExpanded(p => ({ ...p, students: true }));
-    if (location.pathname.includes('/dashboard/payments')) setExpanded(p => ({ ...p, payments: true }));
-    if (location.pathname.includes('/dashboard/invoices')) setExpanded(p => ({ ...p, invoices: true }));
-    if (location.pathname.includes('/dashboard/treasury')) setExpanded(p => ({ ...p, treasury: true }));
+    sidebarConfig.menu.forEach((item: any) => {
+      if (item.type === 'collapsible' && item.id && item.items) {
+        const hasActiveChild = item.items.some((subItem: any) => location.pathname.includes(subItem.to));
+        if (hasActiveChild) {
+          setExpanded(prev => ({ ...prev, [item.id]: true }));
+        }
+      }
+    });
   }, [location.pathname]);
 
   const toggleSection = (section: string) => {
@@ -130,208 +155,89 @@ export function Sidebar() {
             </h1> 
         </div> 
         {isExpanded && (
-            <button
-                onClick={toggleSidebar}
-                className="text-gray-400 hover:text-white focus:outline-none"
-            >
-                {isSidebarCollapsed ? <GoSidebarExpand size={20} /> : <GoSidebarCollapse size={20} />}
-            </button>
+          <button
+              onClick={toggleSidebar}
+              className="text-gray-400 hover:text-white focus:outline-none"
+          >
+              {isSidebarCollapsed ? <GoIcons.GoSidebarExpand size={20} /> : <GoIcons.GoSidebarCollapse size={20} />}
+          </button>
         )}
          {!isExpanded && (
              <div className="w-full flex justify-center">
                  <button onClick={toggleSidebar} className="text-gray-400 hover:text-white">
-                      <GoSidebarExpand size={24}/>
+                      <GoIcons.GoSidebarExpand size={24}/>
                  </button>
              </div>
          )}
       </div>
 
       <nav className="flex-1 px-2 space-y-1 overflow-y-auto scrollbar-minimalist pr-1">
-        <div className={headerClass}>Auto Gestión</div>
-        <NavLink to="/dashboard" end className={linkClass} title={!isExpanded ? "Panel de Control" : undefined}>
-          <MdDashboard className="mr-3 text-lg min-w-[1.125rem]" />
-          <span className={`transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>Panel de Control</span>
-        </NavLink>
-        <NavLink to="/dashboard/documents" className={linkClass} title={!isExpanded ? "Mis Documentos" : undefined}>
-          <FaFolder className="mr-3 text-lg min-w-[1.125rem]" />
-          <span className={`transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>Mis Documentos</span>
-        </NavLink>
-        <NavLink to="/dashboard/achievements" className={linkClass} title={!isExpanded ? "Mis Logros" : undefined}>
-          <FaTrophy className="mr-3 text-lg min-w-[1.125rem]" />
-          <span className={`transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>Mis Logros</span>
-        </NavLink>
+        {sidebarConfig.menu.map((item: any, idx: number) => {
+          // Check if item is explicitly disabled
+          if (item.isEnabled === false) return null;
 
-        <CollapsibleItem 
-            title="Pagos" 
-            id="user-payments" 
-            isActivePath={location.pathname.includes('/dashboard/my-payments')}
-            icon={MdPayments}
-        >
-        <NavLink to="/dashboard/my-payments" end className={subLinkClass}>
-            {({ isActive }) => (
-            <>
-                <GoDotFill className={`mr-2 text-xs ${isActive ? "text-golden-rod-400" : "text-gray-500 group-hover:text-white"}`} />
-                Listado
-            </>
-            )}
-        </NavLink>
-        </CollapsibleItem>
+          // Check role restriction
+          if (item.requiredRole === 'admin' && !isAdmin) return null;
 
-        {isAdmin && (
-          <>
-            <div className={headerClass}>Gestión</div>
-            
-            <NavLink to="/dashboard/admin" end className={linkClass} title={!isExpanded ? "Panel Administrativo" : undefined}>
-                <MdAdminPanelSettings className="mr-3 text-lg min-w-[1.125rem]" />
-                <span className={`transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>Panel Administrativo</span>
-            </NavLink>
+          // Check if module is active
+          if (item.module && !sidebarConfig.activeModules[item.module as keyof typeof sidebarConfig.activeModules]) {
+            return null;
+          }
 
-            <CollapsibleItem 
-                title="Usuarios" 
-                id="users" 
-                isActivePath={location.pathname.includes('/dashboard/users')}
-                icon={FaUsers}
-            >
-              <NavLink to="/dashboard/users" end className={subLinkClass}>
-                {({ isActive }) => (
-                  <>
-                    <GoDotFill className={`mr-2 text-xs ${isActive ? "text-golden-rod-400" : "text-gray-500 group-hover:text-white"}`} />
-                    Listado
-                  </>
-                )}
+          if (item.type === 'header') {
+            return <div key={idx} className={headerClass}>{item.label}</div>;
+          }
+
+          const IconComponent = item.icon ? ICON_MAP[item.icon] : null;
+
+          if (item.type === 'link' && item.to) {
+            return (
+              <NavLink 
+                key={idx} 
+                to={item.to} 
+                end={item.end} 
+                className={linkClass} 
+                title={!isExpanded ? item.label : undefined}
+              >
+                {IconComponent && <IconComponent className="mr-3 text-lg min-w-[1.125rem]" />}
+                <span className={`transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>
+                  {item.label}
+                </span>
               </NavLink>
-              <NavLink to="/dashboard/users/create" className={subLinkClass}>
-                {({ isActive }) => (
-                  <>
-                    <GoDotFill className={`mr-2 text-xs ${isActive ? "text-golden-rod-400" : "text-gray-500 group-hover:text-white"}`} />
-                    Crear Nuevo
-                  </>
-                )}
-              </NavLink>
-            </CollapsibleItem>
-            
-            <CollapsibleItem 
-                title="Alumnos" 
-                id="students" 
-                isActivePath={location.pathname.includes('/dashboard/students')}
-                icon={FaUserGraduate}
-            >
-              <NavLink to="/dashboard/students" className={subLinkClass}>
-                {({ isActive }) => (
-                  <>
-                    <GoDotFill className={`mr-2 text-xs ${isActive ? "text-golden-rod-400" : "text-gray-500 group-hover:text-white"}`} />
-                    Listado
-                  </>
-                )}
-              </NavLink>
-            </CollapsibleItem>
+            );
+          }
 
-            <CollapsibleItem 
-                title="Pagos" 
-                id="payments" 
-                isActivePath={location.pathname.includes('/dashboard/payments')}
-                icon={MdPayments}
-            >
-              <NavLink to="/dashboard/payments" end className={subLinkClass}>
-                {({ isActive }) => (
-                  <>
-                    <GoDotFill className={`mr-2 text-xs ${isActive ? "text-golden-rod-400" : "text-gray-500 group-hover:text-white"}`} />
-                    Listado
-                  </>
-                )}
-              </NavLink>
-              <NavLink to="/dashboard/payments/pending" className={subLinkClass}>
-                {({ isActive }) => (
-                  <>
-                    <GoDotFill className={`mr-2 text-xs ${isActive ? "text-golden-rod-400" : "text-gray-500 group-hover:text-white"}`} />
-                    Pendientes
-                  </>
-                )}
-              </NavLink>
-            </CollapsibleItem>
+          if (item.type === 'collapsible' && item.id && item.items) {
+            const isActivePath = item.items.some((subItem: any) => location.pathname.includes(subItem.to));
+            return (
+              <CollapsibleItem
+                key={idx}
+                title={item.label}
+                id={item.id}
+                isActivePath={isActivePath}
+                icon={IconComponent || (() => null)}
+              >
+                {item.items.map((subItem: any, sIdx: number) => (
+                  <NavLink 
+                    key={sIdx} 
+                    to={subItem.to} 
+                    end={subItem.end} 
+                    className={subLinkClass}
+                  >
+                    {({ isActive }) => (
+                      <>
+                        <GoDotFill className={`mr-2 text-xs ${isActive ? "text-golden-rod-400" : "text-gray-500 group-hover:text-white"}`} />
+                        {subItem.label}
+                      </>
+                    )}
+                  </NavLink>
+                ))}
+              </CollapsibleItem>
+            );
+          }
 
-            <CollapsibleItem 
-                title="Recibos" 
-                id="invoices" 
-                isActivePath={location.pathname.includes('/dashboard/invoices')}
-                icon={FaFileInvoiceDollar}
-            >
-              <NavLink to="/dashboard/invoices/create" className={subLinkClass}>
-                {({ isActive }) => (
-                  <>
-                    <GoDotFill className={`mr-2 text-xs ${isActive ? "text-golden-rod-400" : "text-gray-500 group-hover:text-white"}`} />
-                    Emitir Factura
-                  </>
-                )}
-              </NavLink>
-              <NavLink to="/dashboard/invoices" end className={subLinkClass}>
-                {({ isActive }) => (
-                  <>
-                    <GoDotFill className={`mr-2 text-xs ${isActive ? "text-golden-rod-400" : "text-gray-500 group-hover:text-white"}`} />
-                    Listado
-                  </>
-                )}
-              </NavLink>
-            </CollapsibleItem>
-
-            <CollapsibleItem 
-                title="Operaciones" 
-                id="operations" 
-                isActivePath={location.pathname.includes('/dashboard/management')}
-                icon={FaTrophy}
-            >
-              <NavLink to="/dashboard/management/bulk-operations" className={subLinkClass}>
-                {({ isActive }) => (
-                  <>
-                    <GoDotFill className={`mr-2 text-xs ${isActive ? "text-golden-rod-400" : "text-gray-500 group-hover:text-white"}`} />
-                    Masivos
-                  </>
-                )}
-              </NavLink>
-            </CollapsibleItem>
-
-            <div className={headerClass}>Ajustes</div>
-
-            <NavLink 
-              to="/dashboard/system" 
-              className={linkClass}
-              title={!isExpanded ? "Sistema" : undefined}
-            >
-              {({ isActive }) => (
-                <>
-                  <MdSettings className={`mr-3 text-lg transition-all duration-300 min-w-[1.125rem] ${isActive ? "text-black-beauty-900" : "text-gray-400 group-hover:text-white"}`} />
-                  <span className={`transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0 overflow-hidden'}`}>Sistema</span>
-                </>
-              )}
-            </NavLink>
-
-            <CollapsibleItem 
-                title="Tesorería" 
-                id="treasury" 
-                isActivePath={location.pathname.includes('/dashboard/treasury')}
-                icon={BsBank}
-            >
-              <NavLink to="/dashboard/treasury/payment-methods" className={subLinkClass}>
-                {({ isActive }) => (
-                  <>
-                    <GoDotFill className={`mr-2 text-xs ${isActive ? "text-golden-rod-400" : "text-gray-500 group-hover:text-white"}`} />
-                    Métodos de Pago
-                  </>
-                )}
-              </NavLink>
-              <NavLink to="/dashboard/treasury/accounts" className={subLinkClass}>
-                {({ isActive }) => (
-                  <>
-                    <GoDotFill className={`mr-2 text-xs ${isActive ? "text-golden-rod-400" : "text-gray-500 group-hover:text-white"}`} />
-                    Cuentas
-                  </>
-                )}
-              </NavLink>
-            </CollapsibleItem>
-          </>
-        )}
-
-
+          return null;
+        })}
       </nav>
 
       <div className="p-4 border-t border-black-beauty-800 mt-auto">

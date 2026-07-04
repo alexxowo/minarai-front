@@ -8,10 +8,13 @@ Name | Type
 ------------ | -------------
 `firstName` | string
 `lastName` | string
+`identificationNumber` | string
 `email` | string
 `dob` | Date
 `phone` | string
 `password` | string
+`isAdultStudent` | boolean
+`rankId` | number
 `createStudent` | boolean
 `student` | [StoreRepresentativeRequestStudent](StoreRepresentativeRequestStudent.md)
 
@@ -24,10 +27,13 @@ import type { StoreRepresentativeRequest } from ''
 const example = {
   "firstName": Juan,
   "lastName": Pérez,
+  "identificationNumber": V-12345678,
   "email": juan.perez@example.com,
-  "dob": Tue May 14 20:00:00 GMT-04:00 1985,
+  "dob": Tue May 14 20:00:00 VET 1985,
   "phone": +584120000000,
   "password": 12345678,
+  "isAdultStudent": false,
+  "rankId": 1,
   "createStudent": false,
   "student": null,
 } satisfies StoreRepresentativeRequest

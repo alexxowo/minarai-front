@@ -1,6 +1,9 @@
 import type { Route } from "./+types/admin-panel";
 import { StatCard } from "../../components/molecules/StatCard";
 import { FaUserGraduate, FaUserCheck, FaUserTimes, FaCalendarAlt } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { adminStatsApiClient } from "../../utils/api-client";
+import type { StatCardResponse } from "../../api-client/models";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -9,13 +12,44 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function AdminPanel() {
-  // Mock Data
-  const stats = {
-    totalStudents: 156,
-    activeStudents: 124,
-    inactiveStudents: 32,
-    currentDate: new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
-  };
+  const [totalStudents, setTotalStudents] = useState<StatCardResponse | null>(null);
+  const [activeStudents, setActiveStudents] = useState<StatCardResponse | null>(null);
+  const [inactiveStudents, setInactiveStudents] = useState<StatCardResponse | null>(null);
+
+  const [loadingTotal, setLoadingTotal] = useState(true);
+  const [loadingActive, setLoadingActive] = useState(true);
+  const [loadingInactive, setLoadingInactive] = useState(true);
+
+  const currentDate = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+  useEffect(() => {
+    adminStatsApiClient.getTotalStudents()
+      .then(res => {
+        if (res && res.data) {
+          setTotalStudents(res.data);
+        }
+      })
+      .catch(err => console.error("Error fetching total students:", err))
+      .finally(() => setLoadingTotal(false));
+
+    adminStatsApiClient.getActiveStudents()
+      .then(res => {
+        if (res && res.data) {
+          setActiveStudents(res.data);
+        }
+      })
+      .catch(err => console.error("Error fetching active students:", err))
+      .finally(() => setLoadingActive(false));
+
+    adminStatsApiClient.getInactiveStudents()
+      .then(res => {
+        if (res && res.data) {
+          setInactiveStudents(res.data);
+        }
+      })
+      .catch(err => console.error("Error fetching inactive students:", err))
+      .finally(() => setLoadingInactive(false));
+  }, []);
 
   const activeStudentsList = [
     { id: '1', name: "Ana García", grade: "Cinta Blanca", status: "Activo", lastPayment: "05/02/2024" },
@@ -34,7 +68,7 @@ export default function AdminPanel() {
         </div>
         <div className="mt-4 sm:mt-0 px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-100 flex items-center text-gray-600 text-sm font-medium">
             <FaCalendarAlt className="mr-2 text-golden-rod-500" />
-            <span className="capitalize">{stats.currentDate}</span>
+            <span className="capitalize">{currentDate}</span>
         </div>
       </div>
 
@@ -42,24 +76,27 @@ export default function AdminPanel() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <StatCard
           title="Total Alumnos"
-          value={stats.totalStudents}
+          value={totalStudents?.value ?? 0}
           icon={FaUserGraduate}
           color="bg-purple-500"
-          trend={{ value: 12, isPositive: true }}
+          trend={totalStudents?.trend ? { value: totalStudents.trend.value ?? 0, isPositive: totalStudents.trend.isPositive ?? true } : undefined}
+          loading={loadingTotal}
         />
         <StatCard
           title="Alumnos Activos"
-          value={stats.activeStudents}
+          value={activeStudents?.value ?? 0}
           icon={FaUserCheck}
           color="bg-green-500"
-          trend={{ value: 8, isPositive: true }}
+          trend={activeStudents?.trend ? { value: activeStudents.trend.value ?? 0, isPositive: activeStudents.trend.isPositive ?? true } : undefined}
+          loading={loadingActive}
         />
         <StatCard
           title="Alumnos Inactivos"
-          value={stats.inactiveStudents}
+          value={inactiveStudents?.value ?? 0}
           icon={FaUserTimes}
           color="bg-red-500"
-          trend={{ value: 2, isPositive: false }}
+          trend={inactiveStudents?.trend ? { value: inactiveStudents.trend.value ?? 0, isPositive: inactiveStudents.trend.isPositive ?? false } : undefined}
+          loading={loadingInactive}
         />
       </div>
 

@@ -28,7 +28,7 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       login: async ({ email, password }) => {
         const response = await authApiClient.login(email, password);
-        
+
         if (response && response.data && response.data.accessToken && response.data.user) {
           const apiUser = response.data.user;
           const mappedUser: User = {
@@ -38,7 +38,7 @@ export const useAuthStore = create<AuthState>()(
             role: String(apiUser.role || 'USER').toLowerCase(), // "admin" or "user"
             image: undefined,
           };
-          
+
           set({
             user: mappedUser,
             isAuthenticated: true,

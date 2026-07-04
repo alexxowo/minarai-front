@@ -33,7 +33,7 @@ const example = {
   "studentId": 1,
   "userId": 2,
   "amount": 800.00,
-  "paymentDate": Mon Jun 29 20:00:00 GMT-04:00 2026,
+  "paymentDate": Mon Jun 29 20:00:00 VET 2026,
   "paymentMethod": Transferencia,
   "referenceNumber": REF-123456,
   "receiptPath": receipts/abc.png,

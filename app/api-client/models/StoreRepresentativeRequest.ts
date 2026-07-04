@@ -44,6 +44,12 @@ export interface StoreRepresentativeRequest {
      * @type {string}
      * @memberof StoreRepresentativeRequest
      */
+    identificationNumber?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof StoreRepresentativeRequest
+     */
     email: string;
     /**
      * 
@@ -63,6 +69,18 @@ export interface StoreRepresentativeRequest {
      * @memberof StoreRepresentativeRequest
      */
     password?: string | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof StoreRepresentativeRequest
+     */
+    isAdultStudent?: boolean | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof StoreRepresentativeRequest
+     */
+    rankId?: number | null;
     /**
      * 
      * @type {boolean}
@@ -100,10 +118,13 @@ export function StoreRepresentativeRequestFromJSONTyped(json: any, ignoreDiscrim
         
         'firstName': json['first_name'],
         'lastName': json['last_name'],
+        'identificationNumber': json['identification_number'] == null ? undefined : json['identification_number'],
         'email': json['email'],
         'dob': (new Date(json['dob'])),
         'phone': json['phone'] == null ? undefined : json['phone'],
         'password': json['password'] == null ? undefined : json['password'],
+        'isAdultStudent': json['is_adult_student'] == null ? undefined : json['is_adult_student'],
+        'rankId': json['rank_id'] == null ? undefined : json['rank_id'],
         'createStudent': json['create_student'] == null ? undefined : json['create_student'],
         'student': json['student'] == null ? undefined : StoreRepresentativeRequestStudentFromJSON(json['student']),
     };
@@ -122,10 +143,13 @@ export function StoreRepresentativeRequestToJSONTyped(value?: StoreRepresentativ
         
         'first_name': value['firstName'],
         'last_name': value['lastName'],
+        'identification_number': value['identificationNumber'],
         'email': value['email'],
         'dob': value['dob'].toISOString().substring(0,10),
         'phone': value['phone'],
         'password': value['password'],
+        'is_adult_student': value['isAdultStudent'],
+        'rank_id': value['rankId'],
         'create_student': value['createStudent'],
         'student': StoreRepresentativeRequestStudentToJSON(value['student']),
     };

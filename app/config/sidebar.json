@@ -1,0 +1,198 @@
+{
+  "activeModules": {
+    "dashboard": true,
+    "documents": false,
+    "achievements": false,
+    "my-payments": true,
+    "admin-panel": true,
+    "users": true,
+    "students": true,
+    "payments": true,
+    "invoices": false,
+    "operations": false,
+    "system": true,
+    "treasury": false
+  },
+  "menu": [
+    {
+      "type": "header",
+      "label": "Auto Gestión",
+      "requiredRole": "user",
+      "isEnabled": true
+    },
+    {
+      "type": "link",
+      "label": "Panel de Control",
+      "to": "/dashboard",
+      "icon": "MdDashboard",
+      "module": "dashboard",
+      "isEnabled": true
+    },
+    {
+      "type": "link",
+      "label": "Mis Documentos",
+      "to": "/dashboard/documents",
+      "icon": "FaFolder",
+      "module": "documents",
+      "isEnabled": true
+    },
+    {
+      "type": "link",
+      "label": "Mis Logros",
+      "to": "/dashboard/achievements",
+      "icon": "FaTrophy",
+      "module": "achievements",
+      "isEnabled": true
+    },
+    {
+      "type": "collapsible",
+      "label": "Pagos",
+      "id": "user-payments",
+      "icon": "MdPayments",
+      "module": "my-payments",
+      "isEnabled": true,
+      "items": [
+        {
+          "label": "Listado",
+          "to": "/dashboard/my-payments"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "label": "Gestión",
+      "requiredRole": "admin",
+      "isEnabled": true
+    },
+    {
+      "type": "link",
+      "label": "Panel Administrativo",
+      "to": "/dashboard/admin",
+      "icon": "MdAdminPanelSettings",
+      "requiredRole": "admin",
+      "module": "admin-panel",
+      "isEnabled": true
+    },
+    {
+      "type": "collapsible",
+      "label": "Usuarios",
+      "id": "users",
+      "icon": "FaUsers",
+      "requiredRole": "admin",
+      "module": "users",
+      "isEnabled": true,
+      "items": [
+        {
+          "label": "Listado",
+          "to": "/dashboard/users"
+        },
+        {
+          "label": "Crear Nuevo",
+          "to": "/dashboard/users/create"
+        }
+      ]
+    },
+    {
+      "type": "collapsible",
+      "label": "Alumnos",
+      "id": "students",
+      "icon": "FaUserGraduate",
+      "requiredRole": "admin",
+      "module": "students",
+      "isEnabled": true,
+      "items": [
+        {
+          "label": "Listado",
+          "to": "/dashboard/students"
+        }
+      ]
+    },
+    {
+      "type": "collapsible",
+      "label": "Pagos",
+      "id": "payments",
+      "icon": "MdPayments",
+      "requiredRole": "admin",
+      "module": "payments",
+      "isEnabled": true,
+      "items": [
+        {
+          "label": "Listado",
+          "to": "/dashboard/payments"
+        },
+        {
+          "label": "Pendientes",
+          "to": "/dashboard/payments/pending"
+        }
+      ]
+    },
+    {
+      "type": "collapsible",
+      "label": "Recibos",
+      "id": "invoices",
+      "icon": "FaFileInvoiceDollar",
+      "requiredRole": "admin",
+      "module": "invoices",
+      "isEnabled": true,
+      "items": [
+        {
+          "label": "Emitir Factura",
+          "to": "/dashboard/invoices/create"
+        },
+        {
+          "label": "Listado",
+          "to": "/dashboard/invoices"
+        }
+      ]
+    },
+    {
+      "type": "collapsible",
+      "label": "Operaciones",
+      "id": "operations",
+      "icon": "FaTrophy",
+      "requiredRole": "admin",
+      "module": "operations",
+      "isEnabled": true,
+      "items": [
+        {
+          "label": "Masivos",
+          "to": "/dashboard/management/bulk-operations"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "label": "Ajustes",
+      "requiredRole": "admin",
+      "isEnabled": true
+    },
+    {
+      "type": "link",
+      "label": "Sistema",
+      "to": "/dashboard/system",
+      "icon": "MdSettings",
+      "requiredRole": "admin",
+      "module": "system",
+      "isEnabled": true
+    },
+    {
+      "type": "collapsible",
+      "label": "Tesorería",
+      "id": "treasury",
+      "icon": "BsBank",
+      "requiredRole": "admin",
+      "module": "treasury",
+      "isEnabled": true,
+      "items": [
+        {
+          "label": "Métodos de Pago",
+          "to": "/dashboard/treasury/payment-methods"
+        },
+        {
+          "label": "Cuentas",
+          "to": "/dashboard/treasury/accounts"
+        }
+      ]
+    }
+  ]
+}

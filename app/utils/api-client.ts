@@ -2,6 +2,7 @@ import { Configuration } from '../api-client/runtime';
 import { AutenticacinApi } from '../api-client/apis/AutenticacinApi';
 import { AdministracinAlumnosApi } from '../api-client/apis/AdministracinAlumnosApi';
 import { AdministracinRepresentantesApi } from '../api-client/apis/AdministracinRepresentantesApi';
+import { AdministracinEstadsticasApi } from '../api-client/apis/AdministracinEstadsticasApi';
 import { useAuthStore } from '../store/useAuthStore';
 import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
@@ -122,6 +123,7 @@ export async function apiWrapper<T>(promise: Promise<T>): Promise<T> {
 const rawAuthApi = new AutenticacinApi(apiConfig);
 const rawAlumnosApi = new AdministracinAlumnosApi(apiConfig);
 const rawRepresentantesApi = new AdministracinRepresentantesApi(apiConfig);
+const rawStatsApi = new AdministracinEstadsticasApi(apiConfig);
 
 // -------------------------------------------------------------
 // Mapped clean wrappers for easy integration
@@ -136,7 +138,7 @@ export const authApiClient = {
    */
   login: (email: string, password = 'password') =>
     apiWrapper(
-      rawAuthApi.bc76a9d52929cab7a147ca7b5c527430({
+      rawAuthApi.login({
         loginRequest: { email, password }
       })
     ),
@@ -145,7 +147,7 @@ export const authApiClient = {
    * Log out current user session.
    */
   logout: () =>
-    apiWrapper(rawAuthApi._0ab4e3cf7bc4f7ec81b48f7928c7de7c()),
+    apiWrapper(rawAuthApi.logout()),
 
   /**
    * Register a new user/representative.
@@ -154,7 +156,7 @@ export const authApiClient = {
     const password = payload.password || 'password123';
     const passwordConfirmation = payload.passwordConfirmation || password;
     return apiWrapper(
-      rawAuthApi._573de1fed352c1205a32c4d1b9877375({
+      rawAuthApi.register({
         registerRequest: {
           firstName: payload.firstName,
           lastName: payload.lastName,
@@ -176,31 +178,31 @@ export const adminStudentsApiClient = {
    * List all registered students (Admin only).
    */
   getAllStudents: () =>
-    apiWrapper(rawAlumnosApi._043be570e56f8ff7a31e3ae3694c93c9()),
+    apiWrapper(rawAlumnosApi.getStudents()),
 
   /**
    * Register a new student (Admin only).
    */
   createStudent: (payload?: any) =>
-    apiWrapper(rawAlumnosApi._961d499e9711c8b48daa3e2612ab2014(payload)),
+    apiWrapper(rawAlumnosApi.enrollStudent(payload)),
 
   /**
    * Retrieve profile details for a specific student (Admin only).
    */
   getStudentDetail: (studentId: number) =>
-    apiWrapper(rawAlumnosApi._73dbbc5d6a42e6594ebcee2fa13ef6e4({ student: studentId })),
+    apiWrapper(rawAlumnosApi.showStudent({ student: studentId })),
 
   /**
    * Update student details (Admin only).
    */
   updateStudent: (studentId: number, payload?: any) =>
-    apiWrapper(rawAlumnosApi.e7ea3c55affeb8fce01d20ba96514815({ student: studentId, ...payload })),
+    apiWrapper(rawAlumnosApi.updateStudent({ student: studentId, ...payload })),
 
   /**
    * Suspends or restores a student's active status (Admin only).
    */
   updateStudentStatus: (studentId: number) =>
-    apiWrapper(rawAlumnosApi._4f55fdb476bc5d5f099e21fd78b8c84f({ student: studentId }))
+    apiWrapper(rawAlumnosApi.toggleStudentStatus({ student: studentId }))
 };
 
 /**
@@ -212,17 +214,31 @@ export const adminRepresentativesApiClient = {
    * List all registered representatives (Admin only).
    */
   getAllRepresentatives: () =>
-    apiWrapper(rawRepresentantesApi._4fa2d0ee6891740d98d1b69148d5891b()),
+    apiWrapper(rawRepresentantesApi.getRepresentatives()),
 
   /**
    * Retrieve representative details along with associated students (Admin only).
    */
   getRepresentativeDetail: (userId: number) =>
-    apiWrapper(rawRepresentantesApi._0035c4e1ba50d6fdac37175767b485e4({ user: userId })),
+    apiWrapper(rawRepresentantesApi.showRepresentative({ user: userId })),
 
   /**
    * Suspends a representative account and all associated students in cascade (Admin only).
    */
   deactivateRepresentative: (userId: number) =>
-    apiWrapper(rawRepresentantesApi.b433dae97eede7cb2189397d9e23ae08({ user: userId }))
+    apiWrapper(rawRepresentantesApi.deactivateRepresentative({ user: userId }))
+};
+
+/**
+ * Wrapper client for Administracion Estadisticas routes.
+ */
+export const adminStatsApiClient = {
+  getTotalStudents: () =>
+    apiWrapper(rawStatsApi.getTotalStudents()),
+
+  getActiveStudents: () =>
+    apiWrapper(rawStatsApi.getActiveStudents()),
+
+  getInactiveStudents: () =>
+    apiWrapper(rawStatsApi.getInactiveStudents())
 };

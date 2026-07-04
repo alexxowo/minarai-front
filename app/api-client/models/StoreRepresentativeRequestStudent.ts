@@ -33,6 +33,12 @@ export interface StoreRepresentativeRequestStudent {
     lastName?: string;
     /**
      * 
+     * @type {string}
+     * @memberof StoreRepresentativeRequestStudent
+     */
+    identificationNumber?: string | null;
+    /**
+     * 
      * @type {Date}
      * @memberof StoreRepresentativeRequestStudent
      */
@@ -94,6 +100,7 @@ export function StoreRepresentativeRequestStudentFromJSONTyped(json: any, ignore
         
         'firstName': json['first_name'] == null ? undefined : json['first_name'],
         'lastName': json['last_name'] == null ? undefined : json['last_name'],
+        'identificationNumber': json['identification_number'] == null ? undefined : json['identification_number'],
         'dob': json['dob'] == null ? undefined : (new Date(json['dob'])),
         'phone': json['phone'] == null ? undefined : json['phone'],
         'email': json['email'] == null ? undefined : json['email'],
@@ -117,6 +124,7 @@ export function StoreRepresentativeRequestStudentToJSONTyped(value?: StoreRepres
         
         'first_name': value['firstName'],
         'last_name': value['lastName'],
+        'identification_number': value['identificationNumber'],
         'dob': value['dob'] == null ? value['dob'] : value['dob'].toISOString().substring(0,10),
         'phone': value['phone'],
         'email': value['email'],

@@ -142,7 +142,7 @@ This endpoint does not need any parameter.
 
 ## showStudent
 
-> showStudent(student)
+> ShowStudent200Response showStudent(student)
 
 Ver ficha de un alumno
 
@@ -191,7 +191,7 @@ example().catch(console.error);
 
 ### Return type
 
-`void` (Empty response body)
+[**ShowStudent200Response**](ShowStudent200Response.md)
 
 ### Authorization
 
@@ -200,7 +200,7 @@ example().catch(console.error);
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: `application/json`
 
 
 ### HTTP response details

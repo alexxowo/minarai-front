@@ -1,6 +1,6 @@
 import type { Route } from "./+types/dashboard";
 import { Outlet, redirect, useNavigate } from "react-router";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Sidebar } from "../components/organisms/Sidebar";
 import { UserMenu } from "../components/molecules/UserMenu";
@@ -14,14 +14,29 @@ export function meta({}: Route.MetaArgs) {
 export default function DashboardLayout() {
   const { isAuthenticated, isSidebarCollapsed } = useAuthStore();
   const navigate = useNavigate();
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    const unsub = useAuthStore.persist.onFinishHydration(() => {
+      setHydrated(true);
+    });
+
+    if (useAuthStore.persist.hasHydrated()) {
+      setHydrated(true);
+    }
+
+    return () => {
+      unsub();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (hydrated && !isAuthenticated) {
       navigate("/login");
     }
-  }, [isAuthenticated, navigate]);
+  }, [hydrated, isAuthenticated, navigate]);
 
-  if (!isAuthenticated) {
+  if (!hydrated || !isAuthenticated) {
     return null; // or a loading spinner
   }
 

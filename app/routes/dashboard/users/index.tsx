@@ -92,11 +92,11 @@ export default function Users() {
                                         </div>
                                     </div>
                                 </td>
-                                <td className="px-6 py-4">
-                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                        {user.role === 'USER' ? 'Representante' : user.role}
-                                    </span>
-                                </td>
+                                 <td className="px-6 py-4">
+                                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                         {user.role === 'ADMIN' ? 'Administrador' : (user.student_profile ? 'Alumno Adulto' : 'Padre/Tutor')}
+                                     </span>
+                                 </td>
                                 <td className="px-6 py-4">
                                     <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${user.status === 'active' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200'}`}>
                                         <GoDotFill className={user.status === 'active' ? 'text-green-500' : 'text-red-500'} />
@@ -105,15 +105,19 @@ export default function Users() {
                                 </td>
                                 <td className="px-6 py-4">
                                     <div className="flex -space-x-2 overflow-hidden">
-                                        {user.students && user.students.length > 0 ? user.students.map((student: any, idx: number) => (
-                                            <div key={idx} className="relative inline-block h-8 w-8 rounded-full ring-2 ring-white" title={`${student.name} ${student.surname}`}>
-                                                <div className="h-full w-full rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-600">
-                                                    {student.name.charAt(0)}
-                                                </div>
-                                            </div>
-                                        )) : (
-                                            <span className="text-xs text-gray-400 italic">Sin alumnos</span>
-                                        )}
+                                         {user.students && user.students.length > 0 ? user.students.map((student: any, idx: number) => {
+                                             const studentName = student.user?.first_name || student.user?.firstName || "";
+                                             const studentSurname = student.user?.last_name || student.user?.lastName || "";
+                                             return (
+                                                 <div key={idx} className="relative inline-block h-8 w-8 rounded-full ring-2 ring-white" title={`${studentName} ${studentSurname}`}>
+                                                     <div className="h-full w-full rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-600">
+                                                         {studentName.charAt(0) || "?"}
+                                                     </div>
+                                                 </div>
+                                             );
+                                         }) : (
+                                             <span className="text-xs text-gray-400 italic">Sin alumnos</span>
+                                         )}
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 text-right">

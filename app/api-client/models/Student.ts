@@ -88,6 +88,18 @@ export interface Student {
      * @type {Date}
      * @memberof Student
      */
+    enrollmentDate?: Date | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Student
+     */
+    notes?: string | null;
+    /**
+     * 
+     * @type {Date}
+     * @memberof Student
+     */
     createdAt?: Date;
     /**
      * 
@@ -139,6 +151,8 @@ export function StudentFromJSONTyped(json: any, ignoreDiscriminator: boolean): S
         'representativeId': json['representative_id'] == null ? undefined : json['representative_id'],
         'isActive': json['is_active'] == null ? undefined : json['is_active'],
         'lastPromotionDate': json['last_promotion_date'] == null ? undefined : (new Date(json['last_promotion_date'])),
+        'enrollmentDate': json['enrollment_date'] == null ? undefined : (new Date(json['enrollment_date'])),
+        'notes': json['notes'] == null ? undefined : json['notes'],
         'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
         'updatedAt': json['updated_at'] == null ? undefined : (new Date(json['updated_at'])),
         'user': json['user'] == null ? undefined : UserFromJSON(json['user']),
@@ -165,6 +179,8 @@ export function StudentToJSONTyped(value?: Student | null, ignoreDiscriminator: 
         'representative_id': value['representativeId'],
         'is_active': value['isActive'],
         'last_promotion_date': value['lastPromotionDate'] == null ? value['lastPromotionDate'] : value['lastPromotionDate'].toISOString().substring(0,10),
+        'enrollment_date': value['enrollmentDate'] == null ? value['enrollmentDate'] : value['enrollmentDate'].toISOString().substring(0,10),
+        'notes': value['notes'],
         'created_at': value['createdAt'] == null ? value['createdAt'] : value['createdAt'].toISOString(),
         'updated_at': value['updatedAt'] == null ? value['updatedAt'] : value['updatedAt'].toISOString(),
         'user': UserToJSON(value['user']),

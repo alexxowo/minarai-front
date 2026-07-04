@@ -13,6 +13,8 @@ Name | Type
 `representativeId` | number
 `isActive` | boolean
 `lastPromotionDate` | Date
+`enrollmentDate` | Date
+`notes` | string
 `createdAt` | Date
 `updatedAt` | Date
 `user` | [User](User.md)
@@ -33,6 +35,8 @@ const example = {
   "representativeId": 3,
   "isActive": true,
   "lastPromotionDate": null,
+  "enrollmentDate": Wed Jan 31 20:00:00 VET 2024,
+  "notes": Información adicional,
   "createdAt": null,
   "updatedAt": null,
   "user": null,

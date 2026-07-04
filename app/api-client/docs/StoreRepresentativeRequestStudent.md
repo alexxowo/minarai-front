@@ -8,6 +8,7 @@ Name | Type
 ------------ | -------------
 `firstName` | string
 `lastName` | string
+`identificationNumber` | string
 `dob` | Date
 `phone` | string
 `email` | string
@@ -25,12 +26,13 @@ import type { StoreRepresentativeRequestStudent } from ''
 const example = {
   "firstName": Pedrito,
   "lastName": Pérez,
-  "dob": Wed Aug 19 19:30:00 GMT-04:00 2015,
+  "identificationNumber": V-87654321,
+  "dob": Wed Aug 19 19:30:00 VET 2015,
   "phone": +584120000000,
   "email": pedrito@example.com,
   "rankId": 1,
   "discountPolicyId": 1,
-  "enrollmentDate": Tue Jun 30 20:00:00 GMT-04:00 2026,
+  "enrollmentDate": Tue Jun 30 20:00:00 VET 2026,
   "notes": Notas del alumno,
 } satisfies StoreRepresentativeRequestStudent
 
